@@ -1,0 +1,9 @@
+{
+  "name": "developer-skills",
+  "description": "Essential development skills: systematic debugging, technical changelog generation, and skill authoring with TDD principles",
+  "version": "1.0.0",
+  "author": {
+    "name": "Dominik"
+  },
+  "hooks": "./hooks/hooks.json"
+}

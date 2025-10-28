@@ -1,0 +1,17 @@
+{
+  "name": "local-dev-skills",
+  "owner": {
+    "name": "Dominik",
+    "email": "developer@local.dev"
+  },
+  "metadata": {
+    "description": "Local development skills marketplace"
+  },
+  "plugins": [
+    {
+      "name": "developer-skills",
+      "source": "./",
+      "version": "1.0.0"
+    }
+  ]
+}

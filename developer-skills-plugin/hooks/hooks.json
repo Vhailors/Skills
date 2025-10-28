@@ -1,0 +1,69 @@
+{
+  "$schema": "https://anthropic.com/claude-code/hooks.schema.json",
+  "description": "Intelligent superflow system using context injection to preserve sophisticated workflow automation",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/session-start.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/analyze-prompt.sh",
+            "timeout": 3
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/check-logging.sh",
+            "timeout": 2
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/detect-git-operations.sh",
+            "timeout": 3
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/verify-tests.sh",
+            "timeout": 2
+          }
+        ]
+      }
+    ]
+  },
+  "metadata": {
+    "superflows": 8,
+    "active_hooks": 5,
+    "enforcement_hooks": ["logging-schema", "refactoring-safety", "pre-commit-validation", "test-verification"],
+    "suggestion_hooks": ["quick-fix", "ui-library", "integration-check", "code-explanation"],
+    "documentation": "../SUPERFLOWS.md"
+  }
+}
