@@ -6,12 +6,12 @@
 
 ### Line 1: Session State
 ```
-📁 ~/project  🌿 branch  🛡️ Active-Superflow  ✅ 3/6 todos
+📁 ~/project  🌿 branch  🛡️ Active-Superflow  🧠 95% [=========-]
 ```
 
-### Line 2: Memory Context (Optional)
+### Line 2: Changes & Memory
 ```
-🧠 Memory: 271 obs  📝 Last: Hook blocking fix (#267)
+±102 lines  🧠 Memory: 271 obs  📝 Last: Hook blocking fix (#267)
 ```
 
 ## Installation
@@ -59,9 +59,15 @@
 - 📁 Current directory (abbreviated with ~)
 - 🌿 Git branch (if in repo)
 
-### Conditional Display
+### Conditional Display (Line 1)
 - 🛡️/🐛/🏗️/🎨 Active superflow (when triggered)
-- ✅ Todo progress (if available)
+- 🧠 Context remaining with progress bar (if env var set)
+  - Green: >50%
+  - Yellow: 25-50%
+  - Red: <25%
+
+### Conditional Display (Line 2)
+- ±N lines: Git changes count (unstaged + staged)
 - 🧠 Memory stats (if claude-mem MCP active)
 - 📝 Last observation (if claude-mem MCP active)
 
@@ -83,8 +89,20 @@
 # Test in current directory
 ./statusline.sh
 
-# Expected output (in git repo):
+# Expected output (in git repo with changes):
 # 📁 ~/project  🌿 main
+# ±42 lines
+
+# Test with context remaining
+CLAUDE_CONTEXT_REMAINING=95 ./statusline.sh
+# 📁 ~/project  🌿 main  🧠 95% [=========-]
+# ±42 lines
+
+# Test with active superflow
+echo "ACTIVE_SUPERFLOW=🛡️ Refactoring" > .claude-session
+CLAUDE_CONTEXT_REMAINING=95 ./statusline.sh
+# 📁 ~/project  🌿 main  🛡️ Refactoring  🧠 95% [=========-]
+# ±42 lines
 ```
 
 ## Customization
@@ -119,8 +137,13 @@ readonly DIM='\033[2m'      # Dimmed text for line 2
 ## Requirements
 
 - Bash 4.0+
-- Git (for branch display)
+- Git (for branch and changes display)
 - Claude Code
+
+### Optional
+- `CLAUDE_CONTEXT_REMAINING` env var for context tracking
+- `ccusage` for automatic context detection
+- `claude-mem` MCP server for memory stats
 
 ## Performance
 
@@ -142,3 +165,11 @@ readonly DIM='\033[2m'      # Dimmed text for line 2
 ### Git branch not showing
 - Must be in git repository
 - Git must be in PATH
+
+### Context remaining not showing
+- Set `CLAUDE_CONTEXT_REMAINING` env var with percentage (0-100)
+- Or install `ccusage` for automatic detection
+
+### Git changes showing 0 when there are changes
+- Check `git diff --numstat` output
+- Ensure awk is available in PATH

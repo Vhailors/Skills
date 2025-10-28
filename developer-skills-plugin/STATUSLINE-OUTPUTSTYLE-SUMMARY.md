@@ -17,21 +17,24 @@ Added two features to developer-skills plugin following writing-skills methodolo
 
 **Display** (2 lines):
 ```
-📁 ~/project  🌿 branch  🛡️ Active-Superflow
-🧠 Memory: 271 obs  📝 Last: Hook fix (#267)
+📁 ~/project  🌿 branch  🛡️ Active-Superflow  🧠 95% [=========-]
+±102 lines  🧠 Memory: 271 obs  📝 Last: Hook fix (#267)
 ```
 
 **Components**:
-- Line 1: Directory (always), Git branch (if repo), Active superflow (if triggered)
-- Line 2: Memory context (optional, requires MCP)
+- Line 1: Directory (always), Git branch (if repo), Active superflow (if triggered), Context remaining (if env var set)
+- Line 2: Git changes count, Memory context (optional, requires MCP)
 
 **Test Results**:
 ```
-✅ Git repo: Shows directory + branch + superflow
+✅ Git repo: Shows directory + branch + superflow + context
 ✅ Non-git: Shows directory only
 ✅ Home dir: Shows abbreviated ~ path
 ✅ Superflow active: Shows 🛡️/🐛/🏗️/🎨 indicator
 ✅ No superflow: Clean display without indicator
+✅ Context remaining: Shows percentage + progress bar with color
+✅ Git changes: Shows ±N lines (unstaged + staged)
+✅ Color coding: Green (>50%), Yellow (25-50%), Red (<25%)
 ```
 
 ### 2. Output Style (`output-styles/`)
@@ -227,21 +230,27 @@ developer-skills-plugin/
 
 ## Next Steps (Optional Enhancements)
 
-### Potential Future Additions
-1. **Todo progress**: Integrate with Claude Code todo API when available
-   - Format: `✅ 3/6 todos`
+### Implemented Features
+1. ✅ **Context remaining**: Shows percentage + progress bar
+   - Requires `CLAUDE_CONTEXT_REMAINING` env var or `ccusage`
+   - Color-coded: Green/Yellow/Red
 
-2. **Memory stats**: Integrate with claude-mem MCP server
+2. ✅ **Git changes**: Shows total changed lines
+   - Counts unstaged + staged changes
+   - Format: `±N lines`
+
+### Potential Future Additions
+1. **Memory stats**: Integrate with claude-mem MCP server
    - Format: `🧠 Memory: 271 obs`
    - Format: `📝 Last: Observation title (#ID)`
 
-3. **Session timer**: Show session duration
+2. **Session timer**: Show session duration
    - Format: `⏱️ 15m`
 
-4. **Cost tracking**: Show session cost (if API available)
+3. **Cost tracking**: Show session cost (if API available)
    - Format: `💰 $0.42`
 
-These are not implemented yet - waiting for APIs/MCP availability.
+These require API/MCP availability.
 
 ## Conclusion
 
