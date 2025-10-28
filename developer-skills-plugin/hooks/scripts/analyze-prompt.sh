@@ -272,6 +272,149 @@ Use \`rapid-prototyping\` skill for strategic decisions:
 "
 fi
 
+# Check for security concerns
+SECURITY_PATTERN="security|vulnerability|hack|exploit|attack|auth.*issue|inject|xss|csrf"
+if echo "$USER_PROMPT" | grep -qiE "$SECURITY_PATTERN"; then
+    write_active_superflow "🔐 Security"
+    add_header
+    CONTEXT="${CONTEXT}## 🔐 Security Hardening Workflow
+
+**YOU MUST START YOUR RESPONSE WITH:**
+\"🔐 Security Hardening Workflow activated
+
+I will follow the complete security review process:
+1. Run /security-scan for comprehensive vulnerability analysis
+2. Use security-patterns skill for OWASP Top 10 compliance
+3. Check authentication and authorization
+4. Validate all input handling
+5. Review secrets management
+6. Verify security headers and configuration
+
+Starting with security scan...\"
+
+**THEN IMMEDIATELY:**
+1. Use TodoWrite with all 6 steps above
+2. Actually run /security-scan to identify vulnerabilities
+3. Use security-patterns skill proactively
+4. Address each vulnerability systematically
+5. Run /security-scan again to verify fixes
+
+**IRON LAW: SECURITY FIRST**
+- ALWAYS scan before implementing fixes
+- NEVER trust client-side data
+- ALWAYS validate all user input
+
+"
+fi
+
+# Check for performance issues
+PERF_PATTERN="slow|performance|latency|optimize.*speed|bottleneck|takes.*long"
+if echo "$USER_PROMPT" | grep -qiE "$PERF_PATTERN"; then
+    write_active_superflow "⚡ Performance"
+    add_header
+    CONTEXT="${CONTEXT}## ⚡ Performance Optimization Workflow
+
+**YOU MUST START YOUR RESPONSE WITH:**
+\"⚡ Performance Optimization Workflow activated
+
+I will follow systematic profiling and optimization:
+1. Run /perf-check to identify bottlenecks
+2. Profile current performance (before metrics)
+3. Use performance-optimization skill
+4. Optimize highest-impact bottlenecks first
+5. Measure improvements (after metrics)
+6. Verify no regressions with tests
+
+Starting with performance analysis...\"
+
+**THEN IMMEDIATELY:**
+1. Use TodoWrite with all 6 steps above
+2. Actually run /perf-check to profile
+3. Use performance-optimization skill for systematic approach
+4. Focus on algorithm > database > caching > network > code
+5. ALWAYS measure before and after
+
+**IRON LAW: PROFILE FIRST, OPTIMIZE SECOND**
+- NO optimization without profiling first
+- ALWAYS measure impact
+- Fix bottlenecks, not symptoms
+
+"
+fi
+
+# Check for dependency updates
+DEPENDENCY_PATTERN="update.*dependenc|upgrade.*package|npm.*update|vulnerabilit.*package|outdated"
+if echo "$USER_PROMPT" | grep -qiE "$DEPENDENCY_PATTERN"; then
+    write_active_superflow "📦 Dependencies"
+    add_header
+    CONTEXT="${CONTEXT}## 📦 Dependency Update Workflow
+
+**YOU MUST START YOUR RESPONSE WITH:**
+\"📦 Dependency Update Workflow activated
+
+I will follow systematic update process:
+1. Check current state (npm outdated, npm audit)
+2. Use dependency-management skill for strategy
+3. Review changelogs for breaking changes
+4. Update incrementally (one at a time)
+5. Run test suite after each update
+6. Verify with /check-integration
+
+Starting with dependency audit...\"
+
+**THEN IMMEDIATELY:**
+1. Use TodoWrite with all 6 steps above
+2. Run npm audit and npm outdated
+3. Use dependency-management skill for risk assessment
+4. Update ONE package at a time
+5. Test after EACH update
+6. Don't batch updates - isolate failures
+
+**IRON LAW: INCREMENTAL UPDATES**
+- ONE package at a time
+- TEST after each update
+- NEVER batch security + feature updates
+
+"
+fi
+
+# Check for learning/explanation requests
+LEARNING_PATTERN="learn|teach me|how does.*work|explain|understand|what is|show me how"
+if echo "$USER_PROMPT" | grep -qiE "$LEARNING_PATTERN"; then
+    write_active_superflow "🎓 Learning"
+    add_header
+    CONTEXT="${CONTEXT}## 🎓 Learning Mode Workflow
+
+**YOU MUST START YOUR RESPONSE WITH:**
+\"🎓 Learning Mode Workflow activated
+
+I will provide comprehensive explanation:
+1. Run /explain-code for historical context
+2. Use /recall-pattern for similar implementations
+3. Provide architectural overview
+4. Show concrete examples
+5. Suggest practice exercises
+6. Create memory observation for future reference
+
+Starting with code analysis...\"
+
+**THEN IMMEDIATELY:**
+1. Use TodoWrite with all 6 steps above
+2. Run /explain-code for context
+3. Use /recall-pattern for past patterns
+4. Explain with examples, not just theory
+5. Make it interactive - ask clarifying questions
+6. Create memory observation when done
+
+**LEARNING PRINCIPLES:**
+- Show, don't just tell
+- Use concrete examples from THIS codebase
+- Build on existing knowledge
+- Check understanding with questions
+
+"
+fi
+
 # Check for code explanation requests
 if echo "$USER_PROMPT" | grep -qiE "$EXPLAIN_PATTERN"; then
     add_header
