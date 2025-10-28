@@ -41,11 +41,16 @@ active_superflow() {
         return
     fi
 
-    local flow
+    local flow progress
     flow=$(grep -oP 'ACTIVE_SUPERFLOW=\K.*' .claude-session 2>/dev/null || true)
+    progress=$(grep -oP 'TODO_PROGRESS=\K.*' .claude-session 2>/dev/null || true)
 
     if [[ -n $flow ]]; then
-        printf "%s" "$flow"
+        if [[ -n $progress ]]; then
+            printf "%s %s" "$flow" "$progress"
+        else
+            printf "%s" "$flow"
+        fi
     fi
 }
 
