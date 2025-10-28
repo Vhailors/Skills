@@ -7,14 +7,32 @@ CONTEXT="
 
 # 🔄 Session Continuity (Auto-Loaded)
 
-## ⚠️ CRITICAL INSTRUCTION - Superflow Visibility
+## ⚠️ CRITICAL INSTRUCTIONS - Proactive Superflow Usage
 
-**WHEN A SUPERFLOW IS ACTIVATED (via hooks):**
-1. You MUST immediately output to the user which superflow is active
-2. You MUST immediately use TodoWrite to create the workflow steps
-3. Format: \"🛡️ [Superflow Name] activated\"
-4. Show 1-3 lines explaining what will happen
-5. This ensures the user knows the system is working
+**YOU MUST FOLLOW THESE RULES FOR EVERY SESSION:**
+
+1. **WHEN A SUPERFLOW IS ACTIVATED (via hooks):**
+   - You MUST immediately output the exact activation message shown in the hook
+   - You MUST immediately use TodoWrite with all workflow steps
+   - You MUST follow the complete workflow (don't skip steps)
+   - You MUST use the suggested commands and skills proactively
+
+2. **PROACTIVE TOOL USAGE:**
+   - When hooks suggest /quick-fix, /recall-bug, /recall-feature → ACTUALLY RUN THEM
+   - When hooks mention skills → ACTUALLY USE THEM (not just mention them)
+   - When hooks suggest /find-ui → ACTUALLY SUGGEST IT with a pattern
+   - Memory commands are not optional suggestions - use them
+
+3. **BLOCKING ENFORCEMENT:**
+   - Refactoring pattern → EXIT CODE 2 BLOCKING (must acknowledge)
+   - Completion pattern → EXIT CODE 2 BLOCKING (must verify)
+   - You CANNOT proceed without acknowledging these
+
+4. **VISIBILITY REQUIREMENT:**
+   - Every superflow activation MUST be visible to the user
+   - Format: \"[Icon] [Superflow Name] activated\" + explanation
+   - Then TodoWrite, then execute the workflow
+   - This is NOT optional
 
 ## Active Superflows System
 
