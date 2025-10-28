@@ -11,7 +11,7 @@
       "name": "developer-skills",
       "description": "Essential development skills: systematic debugging, technical changelog generation, and skill authoring with TDD principles",
       "version": "1.0.0",
-      "source": "https://github.com/Vhailors/Skills.git#master:developer-skills-plugin",
+      "source": "./developer-skills-plugin",
       "author": {
         "name": "Dominik"
       }
