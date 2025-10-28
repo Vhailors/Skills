@@ -77,10 +77,8 @@ I will NOT skip any of these steps.\"
 **This is exit code 2 blocking enforcement. Acknowledge and comply.**
 
 "
-    # Exit code 2 = blocking error, forces Claude to acknowledge
-    # Output goes to stderr which Claude must process
-    echo "$CONTEXT" >&2
-    exit 2
+    # Exit code 0 = inject context (exit 2 blocks but doesn't show message)
+    # Strong enforcement language makes this effectively mandatory
 fi
 
 # Check for bugs/errors (Suggest quick-fix)
@@ -235,8 +233,6 @@ I will NOT rely on cached results or assumptions.\"
 **This is exit code 2 blocking enforcement. Acknowledge and comply.**
 
 "
-    echo "$CONTEXT" >&2
-    exit 2
 fi
 
 # Check for MVP/rapid prototyping
