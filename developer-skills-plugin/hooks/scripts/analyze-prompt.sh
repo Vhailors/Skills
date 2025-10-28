@@ -32,6 +32,13 @@ MVP_PATTERN="mvp|prototype|poc|proof of concept|quick|fast|rapid"
 EXPLAIN_PATTERN="what does|explain|how does|understand|why does"
 PATTERN_RECALL="how did we|how do we|what's the pattern"
 
+# Helper function to write active superflow to session file
+write_active_superflow() {
+    local flow_indicator="$1"
+    # Write to .claude-session in current directory
+    echo "ACTIVE_SUPERFLOW=$flow_indicator" > .claude-session
+}
+
 # Helper function to add header once
 add_header() {
     if [ -z "$CONTEXT" ]; then
@@ -45,6 +52,7 @@ add_header() {
 
 # Check for refactoring (ENFORCED - Iron Law)
 if echo "$USER_PROMPT" | grep -qiE "$REFACTOR_PATTERN"; then
+    write_active_superflow "🛡️ Refactoring"
     add_header
     CONTEXT="${CONTEXT}## 🛡️ REFACTORING SAFETY PROTOCOL (ENFORCED)
 
@@ -83,6 +91,7 @@ fi
 
 # Check for bugs/errors (Suggest quick-fix)
 if echo "$USER_PROMPT" | grep -qiE "$BUG_PATTERN"; then
+    write_active_superflow "🐛 Debugging"
     add_header
     CONTEXT="${CONTEXT}## 🐛 Debugging Superflow Activated
 
@@ -115,6 +124,7 @@ fi
 
 # Check for feature implementation (Spec-kit workflow)
 if echo "$USER_PROMPT" | grep -qiE "$FEATURE_PATTERN"; then
+    write_active_superflow "🏗️ Feature Dev"
     add_header
     CONTEXT="${CONTEXT}## 🏗️ Feature Development Superflow
 
@@ -147,6 +157,7 @@ fi
 
 # Check for UI work (Library search first)
 if echo "$USER_PROMPT" | grep -qiE "$UI_PATTERN"; then
+    write_active_superflow "🎨 UI Dev"
     add_header
     CONTEXT="${CONTEXT}## 🎨 UI Development Superflow
 
@@ -179,6 +190,7 @@ fi
 
 # Check for API changes (Contract review)
 if echo "$USER_PROMPT" | grep -qiE "$API_PATTERN"; then
+    write_active_superflow "🔌 API Design"
     add_header
     CONTEXT="${CONTEXT}## 🔌 API Contract Design Reminder
 
@@ -202,6 +214,7 @@ fi
 
 # Check for completion claims (Verification required)
 if echo "$USER_PROMPT" | grep -qiE "$COMPLETE_PATTERN"; then
+    write_active_superflow "✅ Verifying"
     add_header
     CONTEXT="${CONTEXT}## ✅ Verification Before Completion (ENFORCED)
 
@@ -237,6 +250,7 @@ fi
 
 # Check for MVP/rapid prototyping
 if echo "$USER_PROMPT" | grep -qiE "$MVP_PATTERN"; then
+    write_active_superflow "🚀 Rapid Proto"
     add_header
     CONTEXT="${CONTEXT}## 🚀 Rapid Prototyping Superflow
 
