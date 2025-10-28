@@ -52,8 +52,8 @@ Session Context → Spec Phase → Design Phase → Implementation → Verificat
    - Output: Ready to deploy
 
 **Hook Integration**:
-- `PreFeatureImplementation` → Auto-trigger spec-kit flow
-- `PreCommit` → Auto-trigger `/ship-check`
+- `UserPromptSubmit` (pattern: "implement|build|create feature") → Injects Feature Development Superflow instructions
+- `PreToolUse` (Bash: git commit) → Strongly suggests `/ship-check` before committing
 
 ---
 
@@ -99,8 +99,8 @@ Quick Memory Check → Systematic Analysis → Understanding → Fix → Verify 
    - Output: Knowledge captured for future
 
 **Hook Integration**:
-- `OnError` → Auto-trigger `/quick-fix`
-- `OnTestFailure` → Auto-trigger debugging flow
+- `UserPromptSubmit` (pattern: "bug|error|issue") → Injects Debugging Superflow with `/quick-fix` and `/recall-bug` suggestions
+- `PostToolUse` (Bash: test commands) → Enforces evidence-based verification
 
 ---
 
@@ -140,8 +140,8 @@ Understand → Safety Check → Plan → Execute → Verify
    - Output: Verified safe refactor
 
 **Hook Integration**:
-- `BeforeRefactor` → Auto-enforce `refactoring-safety-protocol`
-- `OnCodeEdit` (large changes) → Suggest tests first
+- `UserPromptSubmit` (pattern: "refactor|rewrite") → **ENFORCES** `refactoring-safety-protocol` with IRON LAW language
+- Context injection requires tests before any refactoring
 
 ---
 
@@ -169,7 +169,7 @@ Load Context → Resume State → Present Options
    - Lists: Pending items and blockers
 
 **Hook Integration**:
-- `SessionStart` → Auto-run `/continue-work`
+- `SessionStart` → Injects superflow system awareness and suggests checking recent context
 
 ---
 
@@ -209,9 +209,8 @@ Comprehensive Checks → Integration Verification → Quality Gates → Changelo
 **Result**: ✅ Ready to ship or ❌ Gaps found with checklist
 
 **Hook Integration**:
-- `PreCommit` → Auto-trigger `/ship-check`
-- `PrePR` → Auto-validate integration
-- `PreDeploy` → Final verification
+- `PreToolUse` (Bash: git commit/push) → Strongly suggests `/ship-check` and `/check-integration`
+- Context injection provides comprehensive pre-ship checklist
 
 ---
 
@@ -248,8 +247,7 @@ Search Premium Library → Use Existing → Adapt shadcn/ui → Error Handling �
    - Output: Polished, professional UI
 
 **Hook Integration**:
-- `BeforeUIImplementation` → Auto-trigger `/find-ui`
-- `OnComponentCreation` → Suggest shadcn/ui blocks
+- `UserPromptSubmit` (pattern: "ui|component") → Suggests `/find-ui` and `using-shadcn-ui` skill before building from scratch
 
 ---
 
@@ -283,8 +281,7 @@ Strategic Decisions → Leverage Existing → Fast Iteration → Verification
    - Output: Fast AND good
 
 **Hook Integration**:
-- `OnMVPRequest` → Auto-trigger `rapid-prototyping`
-- `OnTimeConstraint` → Emphasize existing solutions
+- `UserPromptSubmit` (pattern: "mvp|prototype|poc") → Injects `rapid-prototyping` workflow with strategic decisions framework
 
 ---
 
@@ -317,8 +314,7 @@ TDD Baseline → Write Skill → Test with Agents → Close Loopholes → Deploy
    - Re-test until bulletproof
 
 **Hook Integration**:
-- `OnSkillCreation` → Enforce TDD process
-- `OnSkillEdit` → Require testing
+- `UserPromptSubmit` (pattern: "create skill|write skill") → Enforces TDD process through `writing-skills` skill instructions
 
 ---
 
@@ -358,18 +354,19 @@ Skills with claude-mem integration that provide historical learning:
 
 ## Intelligent Triggers
 
-### Automatic (via hooks):
-- **Session starts** → `/continue-work`
-- **Error occurs** → `/quick-fix`
-- **Before commit** → `/ship-check`
-- **Before refactor** → Enforce safety protocol
-- **New feature** → Spec-kit flow
-- **UI work** → Check `/find-ui`
+### Automatic Context Injection (via hooks):
+- **Session starts** → Injects superflow awareness and workflow guidance
+- **User mentions "bug/error"** → Injects Debugging Superflow with `/quick-fix` suggestion
+- **Before git commit** → Injects pre-ship validation checklist with `/ship-check` suggestion
+- **User mentions "refactor"** → **ENFORCES** refactoring safety protocol (IRON LAW)
+- **User mentions "feature"** → Injects Feature Development workflow with spec-kit steps
+- **User mentions "ui/component"** → Suggests `/find-ui` and shadcn/ui blocks
+- **After test commands** → Enforces evidence-based verification
 
 ### User-Initiated:
-- **Explicit commands**: `/ship-check`, `/explain-code`, etc.
-- **Implicit triggers**: "Build feature X" → feature development flow
-- **Question-based**: "How did we..." → memory search commands
+- **Explicit commands**: `/ship-check`, `/explain-code`, `/recall-bug`, etc.
+- **Implicit triggers**: "Build feature X" → Hook injects feature development flow → Claude follows it
+- **Question-based**: "How did we..." → Hook suggests `/recall-pattern` command
 
 ---
 
@@ -392,19 +389,17 @@ Skills with claude-mem integration that provide historical learning:
 
 See `hooks.json` for the complete hook configuration.
 
-**Hook Types**:
-1. **SessionStart** - On session initialization
-2. **PreCommit** - Before git commit
-3. **OnError** - When error detected
-4. **PreToolUse** - Before using specific tools
-5. **PostToolUse** - After tool execution
-6. **OnUserMessage** - Pattern matching on user input
+**Hook Types Used**:
+1. **SessionStart** - On session initialization → Injects superflow system awareness
+2. **UserPromptSubmit** - Pattern matching on user input → Injects workflow-specific instructions
+3. **PreToolUse** - Before using specific tools (Write/Edit/Bash) → Enforces standards and suggests validation
+4. **PostToolUse** - After tool execution (test commands) → Enforces evidence-based verification
 
-**Hook Actions**:
-- `auto-run`: Execute command automatically
-- `suggest`: Prompt user with suggestion
-- `enforce`: Block action until condition met
-- `remind`: Gentle reminder of best practice
+**Hook Mechanisms**:
+- **Context Injection**: Hooks output markdown instructions that become part of Claude's context
+- **Strong Language**: IRON LAW and enforcement language for critical workflows (refactoring, verification)
+- **Suggestions**: Recommend commands and skills at appropriate times
+- **Enforcement**: Block-level language that Claude must acknowledge before proceeding
 
 ---
 
