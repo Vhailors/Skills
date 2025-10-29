@@ -14,8 +14,7 @@
       "source": "./developer-skills-plugin",
       "author": {
         "name": "Dominik"
-      },
-  "hooks": "./hooks/hooks.json"
+      }
     }
   ]
 }

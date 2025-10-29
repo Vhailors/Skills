@@ -1,0 +1,10 @@
+{
+  "extraKnownMarketplaces": {
+    "local-dev-skills": {
+      "source": {
+        "source": "file",
+        "path": "/mnt/c/Users/Dominik/Documents/Skills/.claude-plugin/marketplace.json"
+      }
+    }
+  }
+}
