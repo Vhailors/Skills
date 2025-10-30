@@ -58,7 +58,7 @@
         ]
       },
       {
-        "matcher": "TodoWrite|Read|Write|Edit|Glob|Grep",
+        "matcher": "Read|Write|Edit|Glob|Grep",
         "hooks": [
           {
             "type": "command",
