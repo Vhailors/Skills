@@ -6,12 +6,12 @@
 
 ### Line 1: Session State
 ```
-📁 ~/project  🌿 branch  🛡️ Active-Superflow  🧠 95% [=========-]
+📁 project  🌿 branch  🛡️ Active-Superflow  🧠 95% [=========-]
 ```
 
 ### Line 2: Changes & Memory
 ```
-±102 lines  🧠 Memory: 271 obs  📝 Last: Hook blocking fix (#267)
+📝 +102/-45  🧠 Memory: 271 obs  📝 Last: Hook blocking fix (#267)
 ```
 
 ## Installation
@@ -56,18 +56,20 @@
 ## Components
 
 ### Always Displayed
-- 📁 Current directory (abbreviated with ~)
+- 📁 Current directory (last folder name only)
 - 🌿 Git branch (if in repo)
 
 ### Conditional Display (Line 1)
-- 🛡️/🐛/🏗️/🎨 Active superflow (when triggered)
-- 🧠 Context remaining with progress bar (if env var set)
+- 🛡️/🐛/🏗️/🎨 Active superflow (when triggered by hooks)
+- 🧠 Context remaining with progress bar
+  - **Source**: Claude Code JSON stdin (automatic when running in Claude Code)
+  - **Fallbacks**: `CLAUDE_CONTEXT_REMAINING` env var or `ccusage` command
   - Green: >50%
   - Yellow: 25-50%
   - Red: <25%
 
 ### Conditional Display (Line 2)
-- ±N lines: Git changes count (unstaged + staged)
+- 📝 +N/-M: Git changes (insertions/deletions, unstaged + staged)
 - 🧠 Memory stats (if claude-mem MCP active)
 - 📝 Last observation (if claude-mem MCP active)
 
@@ -86,23 +88,32 @@
 ## Testing
 
 ```bash
-# Test in current directory
+# Test in current directory (interactive mode)
 ./statusline.sh
-
 # Expected output (in git repo with changes):
-# 📁 ~/project  🌿 main
-# ±42 lines
+# 📁 project  🌿 main
+# 📝 +42/-15
 
-# Test with context remaining
+# Test with JSON stdin (simulates Claude Code)
+echo '{"tokensUsed": 40000, "tokensTotal": 200000}' | ./statusline.sh
+# 📁 project  🌿 main  🧠 80% [========--] ✓
+# 📝 +42/-15
+
+# Test with snake_case field names
+echo '{"tokens_used": 120000, "tokens_total": 200000}' | ./statusline.sh
+# 📁 project  🌿 main  🧠 40% [====------] ⚠
+# 📝 +42/-15
+
+# Test with env var fallback
 CLAUDE_CONTEXT_REMAINING=95 ./statusline.sh
-# 📁 ~/project  🌿 main  🧠 95% [=========-]
-# ±42 lines
+# 📁 project  🌿 main  🧠 95% [=========-] ✓
+# 📝 +42/-15
 
 # Test with active superflow
 echo "ACTIVE_SUPERFLOW=🛡️ Refactoring" > .claude-session
-CLAUDE_CONTEXT_REMAINING=95 ./statusline.sh
-# 📁 ~/project  🌿 main  🛡️ Refactoring  🧠 95% [=========-]
-# ±42 lines
+echo '{"tokensUsed": 30000, "tokensTotal": 200000}' | ./statusline.sh
+# 📁 project  🌿 main  🛡️ Refactoring  🧠 85% [========--] ✓
+# 📝 +42/-15
 ```
 
 ## Customization
@@ -140,16 +151,59 @@ readonly DIM='\033[2m'      # Dimmed text for line 2
 - Git (for branch and changes display)
 - Claude Code
 
+### JSON Parsing (one of the following)
+Context tracking requires parsing JSON from stdin. The script tries these in order:
+1. **jq** (recommended - fastest and most reliable)
+2. **python3** (common fallback)
+3. **grep/sed** (basic fallback, less reliable)
+
+Install jq for best results:
+```bash
+# Ubuntu/Debian
+sudo apt-get install jq
+
+# macOS
+brew install jq
+
+# Windows (WSL)
+sudo apt-get install jq
+```
+
 ### Optional
-- `CLAUDE_CONTEXT_REMAINING` env var for context tracking
-- `ccusage` for automatic context detection
+- `CLAUDE_CONTEXT_REMAINING` env var (fallback if JSON parsing unavailable)
+- `ccusage` command (alternative fallback)
 - `claude-mem` MCP server for memory stats
+
+## How Context Tracking Works
+
+Claude Code passes session data as JSON via stdin to the statusline script. The script automatically parses this data to display context remaining.
+
+### Supported JSON Field Names
+
+The script tries multiple field name patterns for maximum compatibility:
+
+**Token Usage (used/total)**:
+- `tokensUsed` / `tokensTotal` (camelCase)
+- `tokens_used` / `tokens_total` (snake_case)
+- `context_used` / `context_total` (alternative)
+
+**Direct Percentage**:
+- `contextRemaining`
+- `context_remaining`
+
+The script calculates remaining percentage from used/total if available, or uses the percentage directly if provided.
+
+### Priority Order
+
+1. **JSON stdin** from Claude Code (automatic)
+2. **`CLAUDE_CONTEXT_REMAINING`** env var (manual override)
+3. **`ccusage`** command (legacy fallback)
 
 ## Performance
 
 - Execution time: <50ms
 - Memory: <1MB
-- Zero external dependencies (except git)
+- Dependencies: git (required), jq/python3/grep (one required for context tracking)
 
 ## Troubleshooting
 
@@ -167,9 +221,53 @@ readonly DIM='\033[2m'      # Dimmed text for line 2
 - Git must be in PATH
 
 ### Context remaining not showing
+
+**Quick fixes to try:**
+
+1. **Install jq** for reliable JSON parsing:
+   ```bash
+   sudo apt-get install jq  # Ubuntu/Debian
+   brew install jq          # macOS
+   ```
+
+2. **Test manually** to verify script works:
+   ```bash
+   echo '{"tokensUsed": 40000, "tokensTotal": 200000}' | ~/.claude/statusline.sh
+   # Should show: 🧠 Context: 80% on line 2
+   ```
+
+3. **Check configuration** in `~/.claude/settings.json`:
+   ```json
+   {
+     "statusLine": {
+       "type": "command",
+       "command": "~/.claude/statusline.sh"
+     }
+   }
+   ```
+
+4. **Use debug mode** to see what Claude Code sends:
+   ```bash
+   cp developer-skills-plugin/statusline/statusline-debug.sh ~/.claude/statusline.sh
+   # Use Claude Code, then check:
+   cat ~/.claude/statusline-debug.log
+   ```
+
+**See [DEBUG-CONTEXT-NOT-SHOWING.md](./DEBUG-CONTEXT-NOT-SHOWING.md) for detailed troubleshooting.**
+
+**Fallback if stdin not available:**
 - Set `CLAUDE_CONTEXT_REMAINING` env var with percentage (0-100)
-- Or install `ccusage` for automatic detection
+- Or use `ccusage` command
 
 ### Git changes showing 0 when there are changes
 - Check `git diff --numstat` output
 - Ensure awk is available in PATH
+
+### JSON parsing errors
+- Install jq: `sudo apt-get install jq` (Ubuntu/Debian) or `brew install jq` (macOS)
+- Or ensure python3 is installed: `which python3`
+- Test JSON parsing:
+  ```bash
+  echo '{"test": "value"}' | jq -r '.test'
+  # Should output: value
+  ```
