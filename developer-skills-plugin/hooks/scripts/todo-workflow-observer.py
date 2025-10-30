@@ -148,17 +148,18 @@ def check_completion_blocker(todos):
 
     # If all completed, we're done
     if completed == total:
-        return {"continue": False, "message": "✅ All todos completed"}
+        return {"continue": False, "message": "✅ All todos completed", "all_complete": True}
 
     # If there are pending todos, work should continue
     if pending > 0:
         return {
             "continue": True,
             "message": f"📋 {pending} todo(s) pending. Continue with next task.",
-            "stats": {"completed": completed, "pending": pending, "in_progress": in_progress, "total": total}
+            "stats": {"completed": completed, "pending": pending, "in_progress": in_progress, "total": total},
+            "all_complete": False
         }
 
-    return {"continue": False}
+    return {"continue": False, "all_complete": False}
 
 def update_session_state(todos, workflow):
     """Write state to .claude-session for statusline"""
@@ -233,6 +234,103 @@ def generate_missing_todos(missing_patterns, workflow):
             })
 
     return suggestions
+
+def write_workflow_observation(workflow, todos, session_data):
+    """Write completed workflow as an observation for future memory searches"""
+    try:
+        from datetime import datetime
+
+        # Calculate duration
+        if "SESSION_START" in session_data:
+            start_time = datetime.fromisoformat(session_data["SESSION_START"])
+            duration_minutes = int((datetime.now() - start_time).total_seconds() / 60)
+        else:
+            duration_minutes = 0
+
+        # Extract workflow type
+        workflow_type = "feature" if "Feature" in workflow else \
+                       "bugfix" if "Debugging" in workflow else \
+                       "refactor" if "Refactoring" in workflow else \
+                       "change"
+
+        # Build observation
+        observation = {
+            "timestamp": datetime.now().isoformat(),
+            "type": workflow_type,
+            "workflow": workflow,
+            "title": f"{workflow} completed",
+            "steps_completed": [t["content"] for t in todos if t.get("status") == "completed"],
+            "duration_minutes": duration_minutes,
+            "concepts": [workflow.lower().replace(" ", "-"), "workflow-completion", "developer-skills"]
+        }
+
+        # Write to observations file
+        obs_dir = Path(".claude/observations")
+        obs_dir.mkdir(parents=True, exist_ok=True)
+
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        obs_file = obs_dir / f"workflow_{timestamp}.json"
+
+        with open(obs_file, 'w') as f:
+            json.dump(observation, f, indent=2)
+
+        return obs_file
+    except Exception as e:
+        # Silent fail - don't break the workflow if observation writing fails
+        return None
+
+def check_context_compression_needed(todos):
+    """Check if completed todos should be archived to save context"""
+    completed = [t for t in todos if t.get("status") == "completed"]
+    pending = [t for t in todos if t.get("status") != "completed"]
+
+    # If more than 8 completed todos and still have pending work, compress
+    if len(completed) > 8 and len(pending) > 0:
+        return {
+            "compress": True,
+            "completed_count": len(completed),
+            "pending_count": len(pending)
+        }
+
+    return {"compress": False}
+
+def archive_completed_todos(todos, workflow):
+    """Archive completed todos to free up context"""
+    try:
+        completed = [t for t in todos if t.get("status") == "completed"]
+        pending = [t for t in todos if t.get("status") != "completed"]
+
+        # Create archive directory
+        archive_dir = Path(".claude/workflow-archive")
+        archive_dir.mkdir(parents=True, exist_ok=True)
+
+        # Write archive file
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        archive_file = archive_dir / f"archive_{timestamp}.json"
+
+        archive_data = {
+            "timestamp": datetime.now().isoformat(),
+            "workflow": workflow,
+            "completed_todos": completed,
+            "summary": f"Archived {len(completed)} completed steps"
+        }
+
+        with open(archive_file, 'w') as f:
+            json.dump(archive_data, f, indent=2)
+
+        # Create summary for context
+        summary = {
+            "archived_count": len(completed),
+            "archive_file": archive_file.name,
+            "summary_text": "\n".join(f"✅ {t['content']}" for t in completed[:5])  # Show first 5
+        }
+
+        if len(completed) > 5:
+            summary["summary_text"] += f"\n... and {len(completed) - 5} more steps"
+
+        return summary
+    except Exception as e:
+        return None
 
 # === MAIN HOOK LOGIC ===
 
@@ -310,8 +408,72 @@ def main():
         print(json.dumps(output))
         sys.exit(0)
 
+    # Check if context compression is needed
+    compression_check = check_context_compression_needed(todos)
+    if compression_check["compress"]:
+        summary = archive_completed_todos(todos, workflow)
+
+        if summary:
+            compression_msg = f"""
+
+📦 **Context Optimization Active**
+
+Archived {summary['archived_count']} completed steps to save context.
+
+**Summary of Archived Work:**
+{summary['summary_text']}
+
+Full details: `.claude/workflow-archive/{summary['archive_file']}`
+
+**Active Work** ({compression_check['pending_count']} remaining):
+Continue with pending todos.
+"""
+            output = {
+                "hookSpecificOutput": {
+                    "hookEventName": "PostToolUse",
+                    "additionalContext": compression_msg
+                }
+            }
+            print(json.dumps(output))
+            sys.exit(0)
+
     # Check if work should continue
     blocker = check_completion_blocker(todos)
+
+    # If workflow is complete, write observation
+    if blocker.get("all_complete") and workflow:
+        # Read session data for observation
+        session_file = Path(".claude-session")
+        session_data = {}
+        if session_file.exists():
+            for line in session_file.read_text().strip().split("\n"):
+                if "=" in line:
+                    key, value = line.split("=", 1)
+                    session_data[key] = value
+
+        # Write observation
+        obs_file = write_workflow_observation(workflow, todos, session_data)
+
+        if obs_file:
+            completion_msg = f"""
+
+🎉 **Workflow Complete!**
+
+✅ {workflow} finished successfully
+📊 Steps completed: {len([t for t in todos if t.get('status') == 'completed'])}/{len(todos)}
+💾 Observation saved: {obs_file.name}
+
+This workflow has been recorded for future memory searches.
+"""
+            output = {
+                "hookSpecificOutput": {
+                    "hookEventName": "PostToolUse",
+                    "additionalContext": completion_msg
+                }
+            }
+            print(json.dumps(output))
+            sys.exit(0)
+
     if blocker["continue"]:
         stats = blocker.get("stats", {})
         reminder = f"""

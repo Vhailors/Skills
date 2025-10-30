@@ -35,8 +35,41 @@ PATTERN_RECALL="how did we|how do we|what's the pattern"
 # Helper function to write active superflow to session file
 write_active_superflow() {
     local flow_indicator="$1"
-    # Write to .claude-session in current directory
-    echo "ACTIVE_SUPERFLOW=$flow_indicator" > .claude-session
+    local workflow_key=$(echo "$flow_indicator" | tr ' ' '_' | tr -d '🛡️🐛🏗️🎨🔌✅🚀🔐⚡📦🎓')
+
+    # Read existing session data
+    local violations=0
+    if [ -f .claude-session ]; then
+        violations=$(grep -oP "${workflow_key}_VIOLATIONS=\K\d+" .claude-session 2>/dev/null || echo "0")
+    fi
+
+    # Write to .claude-session
+    {
+        echo "ACTIVE_SUPERFLOW=$flow_indicator"
+        echo "${workflow_key}_VIOLATIONS=$violations"
+        echo "LAST_WORKFLOW_CHECK=$(date -Iseconds)"
+    } > .claude-session
+}
+
+# Helper function to get enforcement level based on violations
+get_enforcement_level() {
+    local workflow_key="$1"
+    local violations=0
+
+    if [ -f .claude-session ]; then
+        violations=$(grep -oP "${workflow_key}_VIOLATIONS=\K\d+" .claude-session 2>/dev/null || echo "0")
+    fi
+
+    # Return enforcement level: SUGGEST(0), WARN(1), REQUIRE(2), BLOCK(3+)
+    if [ "$violations" -eq 0 ]; then
+        echo "SUGGEST"
+    elif [ "$violations" -eq 1 ]; then
+        echo "WARN"
+    elif [ "$violations" -eq 2 ]; then
+        echo "REQUIRE"
+    else
+        echo "BLOCK"
+    fi
 }
 
 # Helper function to add header once
@@ -44,7 +77,11 @@ add_header() {
     if [ -z "$CONTEXT" ]; then
         CONTEXT="
 
-# 🎯 Active Superflows (Context-Injected)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🎯 SUPERFLOW SYSTEM ACTIVE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+**System Status**: ✅ Hooks Operational | 🔧 Context Injected | 🎭 Workflow Enforced
 
 "
     fi
@@ -53,33 +90,60 @@ add_header() {
 # Check for refactoring (ENFORCED - Iron Law)
 if echo "$USER_PROMPT" | grep -qiE "$REFACTOR_PATTERN"; then
     write_active_superflow "🛡️ Refactoring"
+    enforcement=$(get_enforcement_level "Refactoring")
     add_header
+
+    # Adaptive enforcement message based on violation history
+    enforcement_msg=""
+    case "$enforcement" in
+        "SUGGEST")
+            enforcement_msg="**RECOMMENDATION**: Consider using the refactoring safety protocol"
+            ;;
+        "WARN")
+            enforcement_msg="⚠️ **WARNING**: You've skipped safety checks before. Please follow the protocol this time."
+            ;;
+        "REQUIRE")
+            enforcement_msg="🔴 **REQUIRED**: Multiple violations detected. You MUST follow the safety protocol."
+            ;;
+        "BLOCK")
+            enforcement_msg="🛑 **BLOCKING ENFORCEMENT**: Pattern of violations detected. This is now mandatory."
+            ;;
+    esac
+
     CONTEXT="${CONTEXT}## 🛡️ REFACTORING SAFETY PROTOCOL (ENFORCED)
 
 **IRON LAW: NO REFACTORING WITHOUT TESTS**
 
-**THIS IS BLOCKING ENFORCEMENT - YOU MUST RESPOND TO THIS MESSAGE**
+$enforcement_msg
 
-**MANDATORY FIRST RESPONSE:**
-You MUST output this EXACT text as your first message:
-\"🛡️ Refactoring Safety Protocol activated
+**IMMEDIATE ACTION #1 - INVOKE SKILL NOW:**
+BEFORE ANY OTHER ACTION, you MUST execute this command:
+\`\`\`
+Skill(command: 'refactoring-safety-protocol')
+\`\`\`
+
+Do NOT describe what you will do. Execute the skill tool NOW.
+
+**IMMEDIATE ACTION #2 - OUTPUT ACTIVATION MESSAGE:**
+After invoking the skill, output this EXACT text with clear visual indicator:
+
+\"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## 🛡️ REFACTORING SAFETY PROTOCOL: ACTIVE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 I will follow these mandatory steps:
 1. Check if tests exist for the code to be refactored
 2. Create tests FIRST if missing (non-negotiable)
 3. Run /explain-code to understand historical context
-4. Use refactoring-safety-protocol skill
-5. Execute refactoring with tests as safety net
-6. Verify all tests still pass
+4. Execute refactoring with tests as safety net
+5. Verify all tests still pass\"
 
-I will NOT skip any of these steps.\"
+**IMMEDIATE ACTION #3 - CREATE TODO LIST:**
+Use TodoWrite with all 5 steps above.
 
-**THEN IMMEDIATELY USE TodoWrite** with all 6 steps above.
-
-**BLOCKING REQUIREMENT:**
-- You CANNOT proceed with refactoring until you acknowledge this protocol
+**BLOCKING REQUIREMENTS:**
+- You CANNOT proceed without invoking the skill first
 - You CANNOT skip test creation
-- You MUST use the refactoring-safety-protocol skill
 - You MUST verify tests pass after changes
 
 **This is exit code 2 blocking enforcement. Acknowledge and comply.**
@@ -95,8 +159,16 @@ if echo "$USER_PROMPT" | grep -qiE "$BUG_PATTERN"; then
     add_header
     CONTEXT="${CONTEXT}## 🐛 Debugging Superflow Activated
 
-**YOU MUST START YOUR RESPONSE WITH:**
-\"🐛 Debugging Superflow activated
+**IMMEDIATE ACTION #1 - INVOKE SKILL NOW:**
+BEFORE ANY OTHER ACTION, execute this command:
+\`\`\`
+Skill(command: 'memory-assisted-debugging')
+\`\`\`
+
+**IMMEDIATE ACTION #2 - OUTPUT ACTIVATION MESSAGE:**
+\"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## 🐛 DEBUGGING SUPERFLOW: ACTIVE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Before investigating, I will check memory for known solutions:
 - Running /quick-fix to search for this exact issue
@@ -106,18 +178,17 @@ Then I will:
 1. Search memory for similar bugs and past solutions
 2. If known fix exists → Apply it (saves 2-5 min)
 3. If new issue → Use systematic-debugging (4 phases)
-4. Use memory-assisted-debugging skill for past failed solutions
-5. Verify the fix actually works\"
+4. Verify the fix actually works\"
 
-**THEN IMMEDIATELY:**
-1. Use TodoWrite with the 5 steps above
-2. Actually run /quick-fix or /recall-bug FIRST (don't skip memory search)
-3. Follow the debugging superflow systematically
+**IMMEDIATE ACTION #3 - CREATE TODO LIST:**
+Use TodoWrite with the 4 steps above.
 
-**PROACTIVE REQUIREMENT:**
+**IMMEDIATE ACTION #4 - RUN MEMORY SEARCH:**
+Actually run /quick-fix or /recall-bug FIRST (don't skip memory search).
+
+**PROACTIVE REQUIREMENTS:**
 - Always check memory BEFORE attempting new solutions
 - Always suggest the fast path first
-- Always use memory-assisted-debugging skill
 
 "
 fi
@@ -128,24 +199,33 @@ if echo "$USER_PROMPT" | grep -qiE "$FEATURE_PATTERN"; then
     add_header
     CONTEXT="${CONTEXT}## 🏗️ Feature Development Superflow
 
-**YOU MUST START YOUR RESPONSE WITH:**
-\"🏗️ Feature Development Superflow activated
+**IMMEDIATE ACTION #1 - INVOKE SKILLS NOW:**
+Execute these commands in order:
+\`\`\`
+Skill(command: 'memory-assisted-spec-kit')
+\`\`\`
+\`\`\`
+Skill(command: 'spec-kit-orchestrator')
+\`\`\`
+
+**IMMEDIATE ACTION #2 - OUTPUT ACTIVATION MESSAGE:**
+\"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## 🏗️ FEATURE DEVELOPMENT SUPERFLOW: ACTIVE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 I will follow the complete spec-kit workflow:
 1. Run /recall-feature to check for similar past implementations
-2. Use memory-assisted-spec-kit skill to learn from past features
-3. Use spec-kit-orchestrator: Constitution → Specify → Clarify → Plan
-4. Implement following the plan
-5. Before marking complete: Run /check-integration + /ship-check
+2. Follow Constitution → Specify → Clarify → Plan phases
+3. Implement following the plan
+4. Before marking complete: Run /check-integration + /ship-check
 
 Starting with memory search to avoid reinventing solutions...\"
 
-**THEN IMMEDIATELY:**
-1. Use TodoWrite with all workflow steps
-2. Actually run /recall-feature BEFORE planning (don't skip memory)
-3. Use memory-assisted-spec-kit skill proactively
-4. Follow spec-kit-orchestrator phases systematically
-5. DO NOT skip verification at the end
+**IMMEDIATE ACTION #3 - CREATE TODO LIST:**
+Use TodoWrite with all workflow steps.
+
+**IMMEDIATE ACTION #4 - RUN MEMORY SEARCH:**
+Actually run /recall-feature BEFORE planning (don't skip memory).
 
 **PROACTIVE REQUIREMENTS:**
 - Always check memory for similar features FIRST
@@ -161,24 +241,34 @@ if echo "$USER_PROMPT" | grep -qiE "$UI_PATTERN"; then
     add_header
     CONTEXT="${CONTEXT}## 🎨 UI Development Superflow
 
-**YOU MUST START YOUR RESPONSE WITH:**
-\"🎨 UI Development Superflow activated
+**IMMEDIATE ACTION #1 - INVOKE SKILLS NOW:**
+Execute these commands:
+\`\`\`
+Skill(command: 'ui-inspiration-finder')
+\`\`\`
+\`\`\`
+Skill(command: 'using-shadcn-ui')
+\`\`\`
+
+**IMMEDIATE ACTION #2 - OUTPUT ACTIVATION MESSAGE:**
+\"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## 🎨 UI DEVELOPMENT SUPERFLOW: ACTIVE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Before building from scratch, I will search existing resources:
-1. Running /find-ui to search premium UI library (51 screenshots, 100+ components)
+1. Running /find-ui to search premium UI library
 2. If found → Adapt existing component (saves significant time)
-3. If not found → Use using-shadcn-ui skill (829 production blocks from shadcnblocks.com)
-4. Plan error handling with error-handling-patterns skill
+3. If not found → Use shadcn/ui blocks (829 production components)
+4. Plan error handling patterns
 5. Implement with loading states, error states, and proper UX
 
 Let me search the premium library first...\"
 
-**THEN IMMEDIATELY:**
-1. Use TodoWrite with all 5 steps
-2. Actually suggest /find-ui with a specific pattern (don't skip this)
-3. Proactively use using-shadcn-ui skill for pre-built blocks
-4. Use error-handling-patterns skill BEFORE implementing
-5. Don't build basic UI from scratch when premium options exist
+**IMMEDIATE ACTION #3 - CREATE TODO LIST:**
+Use TodoWrite with all 5 steps.
+
+**IMMEDIATE ACTION #4 - RUN LIBRARY SEARCH:**
+Actually suggest /find-ui with a specific pattern (don't skip this).
 
 **IRON LAW: SEARCH BEFORE BUILD**
 - ALWAYS check /find-ui FIRST
@@ -222,28 +312,34 @@ if echo "$USER_PROMPT" | grep -qiE "$COMPLETE_PATTERN"; then
 
 **IRON LAW: NO COMPLETION CLAIMS WITHOUT FRESH EVIDENCE**
 
-**MANDATORY FIRST RESPONSE:**
-You MUST output this EXACT text:
-\"✅ Verification Protocol activated
+**IMMEDIATE ACTION #1 - INVOKE SKILL NOW:**
+\`\`\`
+Skill(command: 'verification-before-completion')
+\`\`\`
+
+**IMMEDIATE ACTION #2 - OUTPUT ACTIVATION MESSAGE:**
+\"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## ✅ VERIFICATION PROTOCOL: ACTIVE (ENFORCED)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 I will NOT mark work as complete until I:
 1. Run /check-integration for full-stack verification (DB → API → Frontend)
 2. Run /ship-check for comprehensive validation
-3. Use verification-before-completion skill
-4. Gather FRESH evidence from actual command execution
-5. Confirm ALL tests pass with real output
+3. Gather FRESH evidence from actual command execution
+4. Confirm ALL tests pass with real output
 
 I will NOT rely on cached results or assumptions.\"
 
-**THEN IMMEDIATELY USE TodoWrite** with all 5 verification steps.
+**IMMEDIATE ACTION #3 - CREATE TODO LIST:**
+Use TodoWrite with all 4 verification steps.
+
+**IMMEDIATE ACTION #4 - RUN VERIFICATION COMMANDS:**
+Actually run /check-integration and /ship-check.
 
 **BLOCKING REQUIREMENTS:**
-- You CANNOT claim work is complete without running verification commands
+- You CANNOT claim work is complete without running verification
 - You CANNOT use cached/old test results
 - You MUST provide actual command output as evidence
-- You MUST confirm tests pass with fresh execution
-
-**This is exit code 2 blocking enforcement. Acknowledge and comply.**
 
 "
 fi
@@ -254,20 +350,26 @@ if echo "$USER_PROMPT" | grep -qiE "$MVP_PATTERN"; then
     add_header
     CONTEXT="${CONTEXT}## 🚀 Rapid Prototyping Superflow
 
-**REQUIRED ACTIONS (DO NOT SKIP):**
-1. **IMMEDIATELY OUTPUT** to user: \"🚀 Rapid Prototyping Superflow activated\"
-2. **IMMEDIATELY USE TodoWrite** with these steps:
-   - Use rapid-prototyping skill for decisions
-   - Determine Build vs Buy vs Integrate
-   - Use /find-ui + using-shadcn-ui for UI
-   - Implement MVP with quality gates
-   - Run verification-before-completion
+**IMMEDIATE ACTION #1 - INVOKE SKILL NOW:**
+\`\`\`
+Skill(command: 'rapid-prototyping')
+\`\`\`
 
-Use \`rapid-prototyping\` skill for strategic decisions:
+**IMMEDIATE ACTION #2 - OUTPUT ACTIVATION MESSAGE:**
+\"🚀 Rapid Prototyping Superflow activated\"
+
+**IMMEDIATE ACTION #3 - CREATE TODO LIST:**
+Use TodoWrite with these steps:
+- Determine Build vs Buy vs Integrate
+- Use /find-ui + using-shadcn-ui for UI
+- Implement MVP with quality gates
+- Run verification-before-completion
+
+**Strategic Decisions:**
 - Focus on what NOT to build
 - Build vs Buy vs Integrate matrix
-- Leverage \`/find-ui\` + \`using-shadcn-ui\`
-- Fast ≠ Broken (still use \`verification-before-completion\`)
+- Leverage premium UI resources
+- Fast ≠ Broken (still verify)
 
 "
 fi
@@ -279,25 +381,30 @@ if echo "$USER_PROMPT" | grep -qiE "$SECURITY_PATTERN"; then
     add_header
     CONTEXT="${CONTEXT}## 🔐 Security Hardening Workflow
 
-**YOU MUST START YOUR RESPONSE WITH:**
-\"🔐 Security Hardening Workflow activated
+**IMMEDIATE ACTION #1 - INVOKE SKILL NOW:**
+\`\`\`
+Skill(command: 'security-patterns')
+\`\`\`
+
+**IMMEDIATE ACTION #2 - OUTPUT ACTIVATION MESSAGE:**
+\"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## 🔐 SECURITY HARDENING: ACTIVE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 I will follow the complete security review process:
 1. Run /security-scan for comprehensive vulnerability analysis
-2. Use security-patterns skill for OWASP Top 10 compliance
-3. Check authentication and authorization
-4. Validate all input handling
-5. Review secrets management
-6. Verify security headers and configuration
+2. Check authentication and authorization
+3. Validate all input handling
+4. Review secrets management
+5. Verify security headers and configuration
 
 Starting with security scan...\"
 
-**THEN IMMEDIATELY:**
-1. Use TodoWrite with all 6 steps above
-2. Actually run /security-scan to identify vulnerabilities
-3. Use security-patterns skill proactively
-4. Address each vulnerability systematically
-5. Run /security-scan again to verify fixes
+**IMMEDIATE ACTION #3 - CREATE TODO LIST:**
+Use TodoWrite with all 5 steps above.
+
+**IMMEDIATE ACTION #4 - RUN SECURITY SCAN:**
+Actually run /security-scan to identify vulnerabilities.
 
 **IRON LAW: SECURITY FIRST**
 - ALWAYS scan before implementing fixes
@@ -314,25 +421,30 @@ if echo "$USER_PROMPT" | grep -qiE "$PERF_PATTERN"; then
     add_header
     CONTEXT="${CONTEXT}## ⚡ Performance Optimization Workflow
 
-**YOU MUST START YOUR RESPONSE WITH:**
-\"⚡ Performance Optimization Workflow activated
+**IMMEDIATE ACTION #1 - INVOKE SKILL NOW:**
+\`\`\`
+Skill(command: 'performance-optimization')
+\`\`\`
+
+**IMMEDIATE ACTION #2 - OUTPUT ACTIVATION MESSAGE:**
+\"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## ⚡ PERFORMANCE OPTIMIZATION: ACTIVE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 I will follow systematic profiling and optimization:
 1. Run /perf-check to identify bottlenecks
 2. Profile current performance (before metrics)
-3. Use performance-optimization skill
-4. Optimize highest-impact bottlenecks first
-5. Measure improvements (after metrics)
-6. Verify no regressions with tests
+3. Optimize highest-impact bottlenecks first
+4. Measure improvements (after metrics)
+5. Verify no regressions with tests
 
 Starting with performance analysis...\"
 
-**THEN IMMEDIATELY:**
-1. Use TodoWrite with all 6 steps above
-2. Actually run /perf-check to profile
-3. Use performance-optimization skill for systematic approach
-4. Focus on algorithm > database > caching > network > code
-5. ALWAYS measure before and after
+**IMMEDIATE ACTION #3 - CREATE TODO LIST:**
+Use TodoWrite with all 5 steps above.
+
+**IMMEDIATE ACTION #4 - RUN PROFILING:**
+Actually run /perf-check to profile.
 
 **IRON LAW: PROFILE FIRST, OPTIMIZE SECOND**
 - NO optimization without profiling first
