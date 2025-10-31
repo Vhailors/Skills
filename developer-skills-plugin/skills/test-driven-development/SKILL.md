@@ -133,6 +133,41 @@ test('user can sign up and create first post', async () => {
 });
 ```
 
+## Project Skill Integration
+
+**WHEN writing tests for specific frameworks or technologies:**
+
+1. **Check for Framework-Specific Test Patterns**
+   - Look in `.claude/project-skills/` for relevant expert skills
+   - If testing Supabase integration → check `supabase-expert/SKILL.md` for test examples
+   - If testing Stripe payments → check `stripe-expert/SKILL.md` for mocking patterns
+   - Project skills often contain framework-specific testing conventions
+
+2. **Use Project Skill Test Examples**
+   - Project SKILLs contain real code examples from official docs
+   - Check Quick Reference for common test patterns
+   - Framework-specific mocking strategies in references/
+   - Learn proper setup/teardown for that technology
+
+3. **When No Project Skill Exists**
+   - If repeatedly writing tests for same framework
+   - Pattern detection will suggest creating expert skill after 3rd mention
+   - Generated skill will include test examples from official docs
+   - Future TDD cycles become faster with framework knowledge
+
+**Example Integration:**
+```
+Task: Test Stripe payment flow
+  ↓
+Check: .claude/project-skills/stripe-expert/SKILL.md
+  ↓
+Find: Test examples with Stripe test tokens
+  ↓
+Apply: Framework-specific mocking pattern
+  ↓
+Write: Proper failing test using Stripe conventions
+```
+
 ## Test Coverage Targets
 
 | Test Type | Quantity | Coverage |

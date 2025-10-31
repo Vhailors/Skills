@@ -20,6 +20,11 @@
             "type": "command",
             "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/analyze-prompt.sh",
             "timeout": 3
+          },
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/detect-skill-gaps.sh",
+            "timeout": 2
           }
         ]
       }
@@ -54,6 +59,11 @@
             "type": "command",
             "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/verify-tests.sh",
             "timeout": 2
+          },
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/check-spotlight-errors.sh",
+            "timeout": 2
           }
         ]
       },
@@ -71,9 +81,10 @@
   },
   "metadata": {
     "superflows": 8,
-    "active_hooks": 5,
+    "active_hooks": 7,
     "enforcement_hooks": ["logging-schema", "refactoring-safety", "pre-commit-validation", "test-verification"],
-    "suggestion_hooks": ["quick-fix", "ui-library", "integration-check", "code-explanation"],
-    "documentation": "../SUPERFLOWS.md"
+    "suggestion_hooks": ["quick-fix", "ui-library", "integration-check", "code-explanation", "spotlight-error-check", "skill-gap-detection"],
+    "documentation": "../SUPERFLOWS.md",
+    "integrations": ["spotlight-mcp", "skill-seekers"]
   }
 }

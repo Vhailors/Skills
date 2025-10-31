@@ -1,0 +1,25 @@
+{
+  "version": "1.0",
+  "skills": [
+    {
+      "name": "test-integration",
+      "source": "/mnt/c/Users/Dominik/Documents/Skills/Skill_Seekers/configs/test-integration.json",
+      "type": "doc",
+      "created": "2025-10-31T11:14:29Z",
+      "last_used": "2025-10-31T19:09:14Z",
+      "usage_count": 0,
+      "enhanced": false
+    }
+  ],
+  "dismissals": [
+    {
+      "technology": "firebase",
+      "dismissed_at": "2025-10-31T11:38:30Z"
+    }
+  ],
+  "statistics": {
+    "total_skills": 1,
+    "total_suggestions": 0,
+    "acceptance_rate": 0
+  }
+}

@@ -118,6 +118,41 @@ mcp__claude_mem__search_user_prompts("refactor [function-name]")
 
 **If found → incorporate into refactoring plan**
 
+### Step 2.5: Check Project Skills for Framework Conventions
+
+**WHEN refactoring code that uses specific frameworks:**
+
+1. **Look for Framework-Specific Patterns**
+   - Check `.claude/project-skills/` for relevant expert skills
+   - If refactoring Supabase code → check `supabase-expert/SKILL.md` for conventions
+   - If refactoring Stripe integration → check `stripe-expert/SKILL.md` for best practices
+   - Project skills contain framework-specific refactoring patterns
+
+2. **Understand Framework Idioms**
+   - Frameworks often have "the right way" to do things
+   - Project skill Quick Reference shows idiomatic patterns
+   - Check references/ for framework-specific conventions
+   - Avoid refactoring TO an anti-pattern
+
+3. **When No Project Skill Exists**
+   - If repeatedly refactoring same framework code
+   - Pattern detection will suggest creating expert skill
+   - Generated skill includes framework best practices
+   - Prevents future refactorings from violating framework conventions
+
+**Example Integration:**
+```
+Refactoring: Supabase query optimization
+  ↓
+Check: .claude/project-skills/supabase-expert/SKILL.md
+  ↓
+Find: Query performance patterns section
+  ↓
+Apply: Framework-recommended query structure
+  ↓
+Result: Refactor using Supabase idioms, not anti-patterns
+```
+
 ### Step 3: Identify All Dependencies
 
 **Find who uses this code:**

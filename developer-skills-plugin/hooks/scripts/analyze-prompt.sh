@@ -22,15 +22,15 @@ fi
 CONTEXT=""
 
 # Pattern detection flags
-REFACTOR_PATTERN="refactor|rewrite|restructure|clean up"
-BUG_PATTERN="bug|error|issue|problem|fail|broken|not working"
-FEATURE_PATTERN="implement|build|create|add.*(feature|functionality|component|system)"
-UI_PATTERN="ui|component|interface|design|hero|pricing|testimonial|navbar|form|modal|dialog|card"
-API_PATTERN="api|endpoint|route|controller.*(change|modify|update|add|remove)"
-COMPLETE_PATTERN="done|complete|finished|ready"
-MVP_PATTERN="mvp|prototype|poc|proof of concept|quick|fast|rapid"
-EXPLAIN_PATTERN="what does|explain|how does|understand|why does"
-PATTERN_RECALL="how did we|how do we|what's the pattern"
+REFACTOR_PATTERN="refactor|rewrite|restructure|clean up|cleanup|improve.*code|modernize|simplify|tidy|organize|reorganize|optimize.*code|make.*better|make.*cleaner"
+BUG_PATTERN="bug|error|issue|problem|fail|broken|not working|crash|exception|debug|incorrect|wrong|unexpected|doesn't work|won't work|fix.*error|fix.*issue|not responding"
+FEATURE_PATTERN="implement|build|create|add.*(feature|functionality|component|system)|develop|make.*new|new.*feature|want to add|need to build|add support for"
+UI_PATTERN="ui|component|interface|design|hero|pricing|testimonial|navbar|form|modal|dialog|card|button|page|layout|screen|view|dashboard|header|footer|sidebar|menu|dropdown|table|list|grid"
+API_PATTERN="api|endpoint|route|controller.*(change|modify|update|add|remove)|rest.*api|graphql|webhook|request|response"
+COMPLETE_PATTERN="done|complete|finished|ready|ship it|deploy|push.*prod|release"
+MVP_PATTERN="mvp|prototype|poc|proof of concept|quick|fast|rapid|minimum viable|quick build|basic version|simple version|fast.*implementation"
+EXPLAIN_PATTERN="what does|explain|how does|understand|why does|describe|tell me about|what's.*this|what is"
+PATTERN_RECALL="how did we|how do we|what's the pattern|what pattern|similar.*before|did we.*before"
 
 # Helper function to write active superflow to session file
 write_active_superflow() {
@@ -153,12 +153,36 @@ Use TodoWrite with all 5 steps above.
     # Strong enforcement language makes this effectively mandatory
 fi
 
-# Check for bugs/errors (Suggest quick-fix)
+# Check for bugs/errors (Suggest quick-fix + Spotlight integration)
 if echo "$USER_PROMPT" | grep -qiE "$BUG_PATTERN"; then
     write_active_superflow "🐛 Debugging"
     add_header
-    CONTEXT="${CONTEXT}## 🐛 Debugging Superflow Activated
 
+    # Check if Spotlight MCP is available and query for recent errors
+    SPOTLIGHT_CONTEXT=""
+    if [ -f "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/spotlight-query.sh" ]; then
+        # Check Spotlight status
+        if bash "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/spotlight-query.sh" status &> /dev/null; then
+            SPOTLIGHT_CONTEXT="
+
+**🔎 SPOTLIGHT INTEGRATION ACTIVE:**
+Spotlight MCP server is configured. AI should query Spotlight for:
+- Recent runtime errors with full stack traces
+- Error context (request data, user state, etc.)
+- Error frequency and patterns
+- Exact timestamps for correlation
+
+Use these MCP tools if available:
+- Query Spotlight for errors in last 10 minutes
+- Get full error details including stack trace
+- Use error data to inform memory search
+
+"
+        fi
+    fi
+
+    CONTEXT="${CONTEXT}## 🐛 Debugging Superflow Activated
+$SPOTLIGHT_CONTEXT
 **IMMEDIATE ACTION #1 - INVOKE SKILL NOW:**
 BEFORE ANY OTHER ACTION, execute this command:
 \`\`\`
@@ -170,25 +194,33 @@ Skill(command: 'memory-assisted-debugging')
 ## 🐛 DEBUGGING SUPERFLOW: ACTIVE
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Before investigating, I will check memory for known solutions:
-- Running /quick-fix to search for this exact issue
+Before investigating, I will check for real-time error data:
+- If Spotlight MCP is available, query for recent errors FIRST
+- Use actual error details (stack trace, context) for investigation
+- Search memory with specific error details
 - If not found, running /recall-bug for similar past bugs
 
 Then I will:
-1. Search memory for similar bugs and past solutions
-2. If known fix exists → Apply it (saves 2-5 min)
-3. If new issue → Use systematic-debugging (4 phases)
-4. Verify the fix actually works\"
+1. Query Spotlight for actual runtime errors (if available)
+2. Search memory for similar bugs using error details
+3. If known fix exists → Apply it (saves 2-5 min)
+4. If new issue → Use systematic-debugging (4 phases)
+5. Verify the fix actually works\"
 
 **IMMEDIATE ACTION #3 - CREATE TODO LIST:**
-Use TodoWrite with the 4 steps above.
+Use TodoWrite with all 5 steps above.
 
-**IMMEDIATE ACTION #4 - RUN MEMORY SEARCH:**
-Actually run /quick-fix or /recall-bug FIRST (don't skip memory search).
+**IMMEDIATE ACTION #4 - CHECK SPOTLIGHT (if available):**
+Query Spotlight MCP for recent errors to get actual error data.
+
+**IMMEDIATE ACTION #5 - RUN MEMORY SEARCH:**
+Run /quick-fix or /recall-bug using error details from Spotlight.
 
 **PROACTIVE REQUIREMENTS:**
+- Check Spotlight for real-time errors FIRST (if available)
 - Always check memory BEFORE attempting new solutions
 - Always suggest the fast path first
+- Use actual error context for better debugging
 
 "
 fi
@@ -282,22 +314,35 @@ fi
 if echo "$USER_PROMPT" | grep -qiE "$API_PATTERN"; then
     write_active_superflow "🔌 API Design"
     add_header
-    CONTEXT="${CONTEXT}## 🔌 API Contract Design Reminder
+    CONTEXT="${CONTEXT}## 🔌 API Contract Design Workflow
 
-**REQUIRED ACTIONS (DO NOT SKIP):**
-1. **IMMEDIATELY OUTPUT** to user: \"🔌 API Contract Design activated\"
-2. **IMMEDIATELY USE TodoWrite** with these steps:
-   - Use api-contract-design skill
-   - Check for breaking changes
-   - Consider versioning needs
-   - Ensure backward compatibility
-   - Validate request/response schemas
+**IMMEDIATE ACTION #1 - INVOKE SKILL NOW:**
+\`\`\`
+Skill(command: 'api-contract-design')
+\`\`\`
 
-When modifying APIs, use \`api-contract-design\` skill:
-- Check for breaking changes
-- Consider versioning needs
-- Ensure backward compatibility
-- Validate request/response schemas
+**IMMEDIATE ACTION #2 - OUTPUT ACTIVATION MESSAGE:**
+\"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## 🔌 API CONTRACT DESIGN: ACTIVE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+I will follow the complete API design process:
+1. Analyze existing API contracts and dependencies
+2. Check for breaking changes
+3. Consider API versioning strategy
+4. Ensure backward compatibility
+5. Validate request/response schemas
+6. Document all changes clearly
+
+Starting with contract analysis...\"
+
+**IMMEDIATE ACTION #3 - CREATE TODO LIST:**
+Use TodoWrite with all 6 steps above.
+
+**IRON LAW: CONTRACTS ARE SACRED**
+- ALWAYS check for breaking changes
+- ALWAYS consider versioning
+- NEVER break existing integrations
 
 "
 fi
@@ -356,26 +401,33 @@ Skill(command: 'rapid-prototyping')
 \`\`\`
 
 **IMMEDIATE ACTION #2 - OUTPUT ACTIVATION MESSAGE:**
-\"🚀 Rapid Prototyping Superflow activated\"
+\"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## 🚀 RAPID PROTOTYPING: ACTIVE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+I will follow the MVP development strategy:
+1. Determine Build vs Buy vs Integrate for each component
+2. Use /find-ui to search for existing UI solutions
+3. Leverage shadcn/ui for rapid UI development
+4. Implement with quality gates (fast ≠ broken)
+5. Run verification-before-completion
+
+Starting with component analysis...\"
 
 **IMMEDIATE ACTION #3 - CREATE TODO LIST:**
-Use TodoWrite with these steps:
-- Determine Build vs Buy vs Integrate
-- Use /find-ui + using-shadcn-ui for UI
-- Implement MVP with quality gates
-- Run verification-before-completion
+Use TodoWrite with all 5 steps above.
 
-**Strategic Decisions:**
+**Strategic Principles:**
 - Focus on what NOT to build
-- Build vs Buy vs Integrate matrix
-- Leverage premium UI resources
-- Fast ≠ Broken (still verify)
+- Build vs Buy vs Integrate decision matrix
+- Leverage existing resources maximally
+- Fast ≠ Broken (maintain quality)
 
 "
 fi
 
 # Check for security concerns
-SECURITY_PATTERN="security|vulnerability|hack|exploit|attack|auth.*issue|inject|xss|csrf"
+SECURITY_PATTERN="security|vulnerability|hack|exploit|attack|auth.*issue|inject|xss|csrf|secure|unsafe|permission|access control|sanitize|escape|validate.*input|sql.*inject|authorization|authentication"
 if echo "$USER_PROMPT" | grep -qiE "$SECURITY_PATTERN"; then
     write_active_superflow "🔐 Security"
     add_header
@@ -415,7 +467,7 @@ Actually run /security-scan to identify vulnerabilities.
 fi
 
 # Check for performance issues
-PERF_PATTERN="slow|performance|latency|optimize.*speed|bottleneck|takes.*long"
+PERF_PATTERN="slow|performance|latency|optimize.*speed|bottleneck|takes.*long|faster|speed up|improve.*performance|lag|delay|loading.*slow|response.*time|inefficient|sluggish"
 if echo "$USER_PROMPT" | grep -qiE "$PERF_PATTERN"; then
     write_active_superflow "⚡ Performance"
     add_header
@@ -455,14 +507,21 @@ Actually run /perf-check to profile.
 fi
 
 # Check for dependency updates
-DEPENDENCY_PATTERN="update.*dependenc|upgrade.*package|npm.*update|vulnerabilit.*package|outdated"
+DEPENDENCY_PATTERN="update.*dependenc|upgrade.*package|npm.*update|vulnerabilit.*package|outdated|install.*package|add.*dependency|library.*update|package.*version|yarn.*upgrade|pnpm.*update"
 if echo "$USER_PROMPT" | grep -qiE "$DEPENDENCY_PATTERN"; then
     write_active_superflow "📦 Dependencies"
     add_header
     CONTEXT="${CONTEXT}## 📦 Dependency Update Workflow
 
-**YOU MUST START YOUR RESPONSE WITH:**
-\"📦 Dependency Update Workflow activated
+**IMMEDIATE ACTION #1 - INVOKE SKILL NOW:**
+\`\`\`
+Skill(command: 'dependency-management')
+\`\`\`
+
+**IMMEDIATE ACTION #2 - OUTPUT ACTIVATION MESSAGE:**
+\"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## 📦 DEPENDENCY UPDATE: ACTIVE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 I will follow systematic update process:
 1. Check current state (npm outdated, npm audit)
@@ -474,55 +533,55 @@ I will follow systematic update process:
 
 Starting with dependency audit...\"
 
-**THEN IMMEDIATELY:**
-1. Use TodoWrite with all 6 steps above
-2. Run npm audit and npm outdated
-3. Use dependency-management skill for risk assessment
-4. Update ONE package at a time
-5. Test after EACH update
-6. Don't batch updates - isolate failures
+**IMMEDIATE ACTION #3 - CREATE TODO LIST:**
+Use TodoWrite with all 6 steps above.
+
+**IMMEDIATE ACTION #4 - RUN AUDIT:**
+Actually run npm audit and npm outdated.
 
 **IRON LAW: INCREMENTAL UPDATES**
 - ONE package at a time
 - TEST after each update
 - NEVER batch security + feature updates
+- Isolate failures immediately
 
 "
 fi
 
 # Check for learning/explanation requests
-LEARNING_PATTERN="learn|teach me|how does.*work|explain|understand|what is|show me how"
+LEARNING_PATTERN="learn|teach me|how does.*work|explain|understand|what is|show me how|tutorial|guide|documentation|best practice|how to|walk.*through|show.*example"
 if echo "$USER_PROMPT" | grep -qiE "$LEARNING_PATTERN"; then
     write_active_superflow "🎓 Learning"
     add_header
     CONTEXT="${CONTEXT}## 🎓 Learning Mode Workflow
 
-**YOU MUST START YOUR RESPONSE WITH:**
-\"🎓 Learning Mode Workflow activated
+**IMMEDIATE ACTION #1 - OUTPUT ACTIVATION MESSAGE:**
+\"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## 🎓 LEARNING MODE: ACTIVE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 I will provide comprehensive explanation:
 1. Run /explain-code for historical context
 2. Use /recall-pattern for similar implementations
 3. Provide architectural overview
-4. Show concrete examples
+4. Show concrete examples from THIS codebase
 5. Suggest practice exercises
 6. Create memory observation for future reference
 
 Starting with code analysis...\"
 
-**THEN IMMEDIATELY:**
-1. Use TodoWrite with all 6 steps above
-2. Run /explain-code for context
-3. Use /recall-pattern for past patterns
-4. Explain with examples, not just theory
-5. Make it interactive - ask clarifying questions
-6. Create memory observation when done
+**IMMEDIATE ACTION #2 - CREATE TODO LIST:**
+Use TodoWrite with all 6 steps above.
+
+**IMMEDIATE ACTION #3 - RUN CONTEXT COMMANDS:**
+Actually run /explain-code and /recall-pattern for context.
 
 **LEARNING PRINCIPLES:**
 - Show, don't just tell
 - Use concrete examples from THIS codebase
 - Build on existing knowledge
-- Check understanding with questions
+- Make it interactive - ask clarifying questions
+- Create memory observation when done
 
 "
 fi

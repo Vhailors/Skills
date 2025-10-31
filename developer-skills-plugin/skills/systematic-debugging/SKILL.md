@@ -145,6 +145,41 @@ You MUST complete each phase before proceeding to the next.
    - Keep tracing up until you find the source
    - Fix at source, not at symptom
 
+### Project Skill Integration
+
+**WHEN debugging issues with specific technologies (Supabase, Stripe, etc.):**
+
+1. **Check for Project-Specific Skills**
+   - Look in `.claude/project-skills/` for relevant expert skills
+   - If debugging Supabase issues → check for `supabase-expert/SKILL.md`
+   - If debugging Stripe integration → check for `stripe-expert/SKILL.md`
+   - Project skills contain framework-specific patterns and gotchas
+
+2. **Use Project Skill Context**
+   - Read the SKILL.md file for technology-specific debugging guidance
+   - Check `references/` for detailed API documentation
+   - Look for common error patterns in Quick Reference section
+   - Framework-specific knowledge helps identify root causes faster
+
+3. **When No Project Skill Exists**
+   - If you notice repeated questions about same technology
+   - Pattern detection will suggest creating expert skill after 3rd mention
+   - User can create manually with `/generate-skill`
+   - This prevents future debugging sessions from needing repeated context
+
+**Example Integration:**
+```
+Bug: Supabase authentication failing
+  ↓
+Check: .claude/project-skills/supabase-expert/SKILL.md
+  ↓
+Find: Authentication section with common issues
+  ↓
+Apply: Framework-specific debugging steps
+  ↓
+Result: Faster root cause identification
+```
+
 ### Phase 2: Pattern Analysis
 
 **Find the pattern before fixing:**

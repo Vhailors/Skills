@@ -1,0 +1,20 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "local-dev-skills",
+  "description": "Local development skills marketplace",
+  "version": "1.0.0",
+  "owner": {
+    "name": "Dominik"
+  },
+  "plugins": [
+    {
+      "name": "developer-skills",
+      "description": "Essential development skills: systematic debugging, technical changelog generation, and skill authoring with TDD principles",
+      "version": "1.0.0",
+      "source": "./developer-skills-plugin",
+      "author": {
+        "name": "Dominik"
+      }
+    }
+  ]
+}

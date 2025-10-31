@@ -70,4 +70,62 @@ The system automatically detects patterns in user prompts and injects relevant w
 # SessionStart doesn't need the JSON format like UserPromptSubmit
 echo "$CONTEXT"
 
+# === PROJECT SKILLS LOADING ===
+# Load project-specific skills from .claude/project-skills/
+
+# Paths
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PLUGIN_ROOT="${CLAUDE_PLUGIN_ROOT:-$(cd "$SCRIPT_DIR/../.." && pwd)}"
+PROJECT_ROOT="$(pwd)"  # Current working directory = actual project
+
+PROJECT_SKILLS_DIR="$PROJECT_ROOT/.claude/project-skills"
+METADATA_FILE="$PROJECT_ROOT/.claude/skill-metadata.json"
+
+# Check if project-skills directory exists
+if [[ -d "$PROJECT_SKILLS_DIR" ]]; then
+  # Check if there are any skills
+  SKILL_COUNT=$(find "$PROJECT_SKILLS_DIR" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | wc -l)
+
+  if [[ "$SKILL_COUNT" -gt 0 ]]; then
+    echo ""
+    echo "# 📚 Project Skills Available ($SKILL_COUNT)"
+    echo ""
+    echo "The following project-specific skills are available:"
+    echo ""
+
+    for SKILL_DIR in "$PROJECT_SKILLS_DIR"/*; do
+      if [[ -d "$SKILL_DIR" ]]; then
+        SKILL_NAME=$(basename "$SKILL_DIR")
+
+        # Get skill description from SKILL.md if available
+        SKILL_FILE="$SKILL_DIR/SKILL.md"
+        if [[ -f "$SKILL_FILE" ]]; then
+          DESCRIPTION=$(grep "^description:" "$SKILL_FILE" | head -1 | sed 's/description: *//')
+          if [[ -n "$DESCRIPTION" ]]; then
+            echo "- **$SKILL_NAME**: $DESCRIPTION"
+            echo "  - Location: \`.claude/project-skills/$SKILL_NAME/SKILL.md\`"
+          else
+            echo "- **$SKILL_NAME**: Located at \`.claude/project-skills/$SKILL_NAME/SKILL.md\`"
+          fi
+        else
+          echo "- **$SKILL_NAME**: Located at \`.claude/project-skills/$SKILL_NAME/\`"
+        fi
+
+        # Update last_used timestamp in metadata
+        if [[ -f "$METADATA_FILE" ]] && command -v jq &> /dev/null; then
+          TEMP_FILE=$(mktemp)
+          NOW=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          jq --arg name "$SKILL_NAME" --arg now "$NOW" \
+            '(.skills[] | select(.name == $name) | .last_used) = $now' \
+            "$METADATA_FILE" > "$TEMP_FILE" 2>/dev/null && mv "$TEMP_FILE" "$METADATA_FILE" 2>/dev/null || rm -f "$TEMP_FILE" 2>/dev/null
+        fi
+      fi
+    done
+
+    echo ""
+    echo "**When user asks about these technologies, read the corresponding SKILL.md file for project-specific context.**"
+    echo ""
+  fi
+fi
+
 exit 0

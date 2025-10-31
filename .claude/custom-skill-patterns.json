@@ -1,0 +1,35 @@
+{
+  "$schema": "custom-skill-patterns-schema",
+  "version": "1.0",
+  "description": "Add your own technology patterns for auto-detection. These will be checked in addition to the 30 built-in patterns.",
+  "custom_patterns": [
+    {
+      "pattern": "htmx",
+      "skill_name": "htmx-expert",
+      "description": "HTMX hypermedia library expert",
+      "docs_url": "https://htmx.org/docs",
+      "enabled": true,
+      "comment": "Example: Custom pattern for HTMX (enabled for testing)"
+    },
+    {
+      "pattern": "qwik|qwik\\.dev",
+      "skill_name": "qwik-expert",
+      "description": "Qwik framework expert",
+      "docs_url": "https://qwik.builder.io/docs",
+      "enabled": true
+    },
+    {
+      "pattern": "your-internal-framework",
+      "skill_name": "internal-framework-expert",
+      "description": "Internal company framework expert",
+      "docs_url": "https://internal.company.com/docs",
+      "enabled": false
+    }
+  ],
+  "notes": [
+    "Add your patterns here following the format above",
+    "Pattern uses regex (e.g., 'htmx' or 'qwik|qwik\\.dev')",
+    "Set enabled: true to activate detection",
+    "Run detect-skill-gaps.sh to test patterns"
+  ]
+}
