@@ -1,0 +1,29 @@
+{
+  "name": "mock-data-removal",
+  "version": "1.0.0",
+  "type": "technique",
+  "category": "quality-assurance",
+  "created": "2025-11-02",
+  "tested": true,
+  "integration_points": [
+    "verification-before-completion",
+    "ship-check",
+    "full-stack-integration-checker",
+    "refactoring-safety-protocol"
+  ],
+  "test_scenarios": "TEST-SCENARIOS.md",
+  "baseline_analysis": "BASELINE-ANALYSIS.md",
+  "scripts": {
+    "scan": "scripts/scan-mock-data.sh"
+  },
+  "tags": [
+    "production-safety",
+    "test-artifacts",
+    "quality-gates",
+    "verification",
+    "deployment",
+    "security"
+  ],
+  "pressure_tested": true,
+  "rationalization_table": true
+}

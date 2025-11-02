@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Superflow Guide - Developer Skills System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        header p { font-size: 1.2em; opacity: 0.95; }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 40px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .stat-card .number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-card .label {
+            color: #6c757d;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        
+        nav {
+            background: #2d3748;
+            padding: 20px 40px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        nav ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: background 0.3s;
+            font-size: 0.9em;
+        }
+        
+        nav a:hover { background: rgba(255,255,255,0.1); }
+        
+        .content { padding: 40px; }
+        
+        .superflow {
+            margin-bottom: 60px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-left: 6px solid #667eea;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        
+        .superflow:nth-child(even) { border-left-color: #764ba2; }
+        
+        .superflow-header {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #dee2e6;
+        }
+        
+        .superflow-title {
+            font-size: 2em;
+            color: #2d3748;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .superflow-emoji { font-size: 1.2em; }
+        
+        .superflow-type {
+            display: inline-block;
+            padding: 6px 14px;
+            background: #667eea;
+            color: white;
+            border-radius: 20px;
+            font-size: 0.5em;
+            font-weight: normal;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .enforcement { background: #e53e3e; }
+        .suggestion { background: #48bb78; }
+        
+        .trigger-box {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 2px solid #667eea;
+        }
+        
+        .trigger-box h3 {
+            color: #667eea;
+            margin-bottom: 12px;
+            font-size: 1.1em;
+        }
+        
+        .trigger-examples {
+            background: #2d3748;
+            color: #a0aec0;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            line-height: 1.8;
+        }
+        
+        .trigger-examples div { margin: 5px 0; }
+        .trigger-examples .prompt { color: #63b3ed; }
+        
+        .workflow-steps { margin: 20px 0; }
+        
+        .workflow-steps h3 {
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        
+        .workflow-steps ol { padding-left: 25px; }
+        
+        .workflow-steps li {
+            margin: 12px 0;
+            padding-left: 10px;
+            color: #4a5568;
+        }
+        
+        .principles {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #ed8936;
+        }
+        
+        .principles h3 {
+            color: #ed8936;
+            margin-bottom: 12px;
+            font-size: 1.1em;
+        }
+        
+        .principles ul { list-style: none; padding-left: 0; }
+        
+        .principles li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            color: #4a5568;
+        }
+        
+        .principles li:before {
+            content: "⚡";
+            position: absolute;
+            left: 0;
+        }
+        
+        .skills-invoked {
+            background: #e6fffa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 2px dashed #38b2ac;
+        }
+        
+        .skills-invoked h4 {
+            color: #38b2ac;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+        
+        .skills-invoked code {
+            background: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #2d3748;
+        }
+        
+        .description {
+            font-size: 1.05em;
+            color: #4a5568;
+            line-height: 1.8;
+            margin: 20px 0;
+        }
+        
+        footer {
+            background: #2d3748;
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        footer a {
+            color: #63b3ed;
+            text-decoration: none;
+        }
+        
+        footer a:hover { text-decoration: underline; }
+        
+        .priority-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            background: #fbd38d;
+            color: #744210;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        
+        .priority-high { background: #fc8181; color: #742a2a; }
+        .priority-medium { background: #fbd38d; color: #744210; }
+        .priority-low { background: #9ae6b4; color: #22543d; }
+        
+        @media (max-width: 768px) {
+            header h1 { font-size: 2em; }
+            .superflow { padding: 20px; }
+            .superflow-title { font-size: 1.5em; }
+            nav ul { flex-direction: column; }
+        }
+        
+        @media print {
+            body { background: white; padding: 0; }
+            .container { box-shadow: none; }
+            nav { position: static; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 Complete Superflow Guide</h1>
+            <p>Developer Skills Plugin - Intelligent Workflow Automation System</p>
+        </header>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="number">14</div>
+                <div class="label">Active Superflows</div>
+            </div>
+            <div class="stat-card">
+                <div class="number">100%</div>
+                <div class="label">Test Pass Rate</div>
+            </div>
+            <div class="stat-card">
+                <div class="number">4</div>
+                <div class="label">Enforcement Hooks</div>
+            </div>
+            <div class="stat-card">
+                <div class="number">10</div>
+                <div class="label">Suggestion Hooks</div>
+            </div>
+        </div>
+
+        <nav>
+            <ul>
+                <li><a href="#pixel-perfect">Pixel-Perfect</a></li>
+                <li><a href="#refactoring">Refactoring</a></li>
+                <li><a href="#debugging">Debugging</a></li>
+                <li><a href="#feature">Feature Dev</a></li>
+                <li><a href="#ui">UI Dev</a></li>
+                <li><a href="#api">API Design</a></li>
+                <li><a href="#verification">Verification</a></li>
+                <li><a href="#mvp">Rapid Prototyping</a></li>
+                <li><a href="#security">Security</a></li>
+                <li><a href="#performance">Performance</a></li>
+                <li><a href="#dependencies">Dependencies</a></li>
+                <li><a href="#learning">Learning</a></li>
+                <li><a href="#code-explanation">Code Explanation</a></li>
+                <li><a href="#pattern-recall">Pattern Recall</a></li>
+            </ul>
+        </nav>
+
+        <div class="content">
+            <!-- Superflow 1: Pixel-Perfect Site Copy -->
+            <section id="pixel-perfect" class="superflow">
+                <div class="superflow-header">
+                    <h2 class="superflow-title">
+                        <span class="superflow-emoji">🎨</span>
+                        Pixel-Perfect Site Copy
+                        <span class="superflow-type enforcement">Enforced</span>
+                        <span class="priority-badge priority-high">Highest Priority</span>
+                    </h2>
+                </div>
+
+                <p class="description">
+                    Automates the process of creating pixel-perfect website replicas using Chrome DevTools MCP to extract exact styling, measurements, and design specifications. Generates comprehensive 17-section style guides and implements using Tailwind CSS only. This superflow emphasizes measurement over estimation and extraction over approximation.
+                </p>
+
+                <div class="trigger-box">
+                    <h3>🎯 How to Trigger</h3>
+                    <div class="trigger-examples">
+                        <div><span class="prompt">👉</span> "copy site https://example.com"</div>
+                        <div><span class="prompt">👉</span> "clone website https://stripe.com"</div>
+                        <div><span class="prompt">👉</span> "replicate this page pixel perfect"</div>
+                        <div><span class="prompt">👉</span> "pixel-perfect copy of https://vercel.com"</div>
+                        <div><span class="prompt">👉</span> "extract styling from https://example.com"</div>
+                    </div>
+                </div>
+
+                <div class="skills-invoked">
+                    <h4>📦 Skills Invoked</h4>
+                    <code>pixel-perfect-site-copy</code>
+                </div>
+
+                <div class="workflow-steps">
+                    <h3>📋 Workflow (8 Steps)</h3>
+                    <ol>
+                        <li><strong>Verify Chrome DevTools MCP:</strong> Check if Chrome DevTools MCP is configured and available before starting</li>
+                        <li><strong>Connect & Extract:</strong> Connect to target URL using DevTools MCP and extract computed styles from all major components</li>
+                        <li><strong>Organize Screenshots:</strong> Create standardized directory structure (original/, replica/, comparison/) for screenshot storage</li>
+                        <li><strong>Capture Breakpoints:</strong> Take screenshots at 320px, 768px, 1024px, and 1440px for responsive comparison</li>
+                        <li><strong>Generate Style Guide:</strong> Create comprehensive 17-section style guide including colors, typography, spacing, shadows, animations, border radius, opacity, icons, responsive patterns, and more</li>
+                        <li><strong>Implement with Tailwind:</strong> Build pixel-perfect replica using Tailwind CSS only (no custom CSS)</li>
+                        <li><strong>Validate Equivalence:</strong> Compare implementation against original screenshots for visual accuracy</li>
+                        <li><strong>Deliver Package:</strong> Provide complete deliverable including style guide, implementation, screenshots, and documentation</li>
+                    </ol>
+                </div>
+
+                <div class="principles">
+                    <h3>⚡ Iron Laws</h3>
+                    <ul>
+                        <li><strong>Measure, don't estimate:</strong> Use DevTools Computed values for exact measurements (16.8px line-height, not "about 17px")</li>
+                        <li><strong>Extract, don't approximate:</strong> Get exact hex codes (#667eea), exact font names (Inter 16px), exact spacing (24px margin)</li>
+                        <li><strong>Compare, don't assume:</strong> Validate against screenshots with side-by-side comparison, not visual inspection alone</li>
+                        <li><strong>Document, don't omit:</strong> Complete 17-section style guide is non-negotiable</li>
+                        <li><strong>Replicate, don't redesign:</strong> Preserve original design exactly, no creative improvements</li>
+                        <li><strong>Tailwind only:</strong> No custom CSS, only Tailwind utility classes</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Superflow 2: Refactoring Safety Protocol -->
+            <section id="refactoring" class="superflow">
+                <div class="superflow-header">
+                    <h2 class="superflow-title">
+                        <span class="superflow-emoji">🛡️</span>
+                        Refactoring Safety Protocol
+                        <span class="superflow-type enforcement">Enforced</span>
+                        <span class="priority-badge priority-high">High Priority</span>
+                    </h2>
+                </div>
+
+                <p class="description">
+                    Enforces a mandatory test-first approach to refactoring. This superflow BLOCKS all refactoring operations until tests exist, searches memory for design rationale to understand "why" decisions were made, and ensures behavioral preservation through systematic validation. Uses exit code 2 for hard blocking.
+                </p>
+
+                <div class="trigger-box">
+                    <h3>🎯 How to Trigger</h3>
+                    <div class="trigger-examples">
+                        <div><span class="prompt">👉</span> "refactor the authentication module"</div>
+                        <div><span class="prompt">👉</span> "clean up the payment processing code"</div>
+                        <div><span class="prompt">👉</span> "improve the database query structure"</div>
+                        <div><span class="prompt">👉</span> "restructure the API handlers"</div>
+                        <div><span class="prompt">👉</span> "rewrite the middleware for better performance"</div>
+                    </div>
+                </div>
+
+                <div class="skills-invoked">
+                    <h4>📦 Skills Invoked</h4>
+                    <code>refactoring-safety-protocol</code>
+                </div>
+
+                <div class="workflow-steps">
+                    <h3>📋 Workflow (7 Steps)</h3>
+                    <ol>
+                        <li><strong>Test Check:</strong> Check if tests exist for the code to be refactored</li>
+                        <li><strong>Create Tests FIRST:</strong> If tests are missing, create them BEFORE refactoring (non-negotiable, blocking requirement)</li>
+                        <li><strong>Historical Context:</strong> Run /explain-code to understand why the code was written this way</li>
+                        <li><strong>Memory Search:</strong> Search project memory for design rationale, past decisions, and lessons learned</li>
+                        <li><strong>Execute Refactoring:</strong> Perform refactoring with tests as safety net</li>
+                        <li><strong>Verify Tests Pass:</strong> Ensure ALL tests still pass after changes</li>
+                        <li><strong>Document Changes:</strong> Record reasoning, changes made, and any new patterns introduced</li>
+                    </ol>
+                </div>
+
+                <div class="principles">
+                    <h3>⚡ Iron Laws</h3>
+                    <ul>
+                        <li><strong>NO REFACTORING WITHOUT TESTS:</strong> Hard blocking enforcement (exit code 2). Cannot proceed without tests.</li>
+                        <li><strong>Test creation is non-negotiable:</strong> If tests don't exist, creating them is the first mandatory step</li>
+                        <li><strong>Always search memory:</strong> Check for historical context and past decisions before changing code</li>
+                        <li><strong>Behavior preservation:</strong> Verify through empirical validation (run tests), not assumptions</li>
+                        <li><strong>Incremental approach:</strong> Small changes with rollback plan, not big-bang rewrites</li>
+                        <li><strong>No shortcuts:</strong> Cannot skip steps or bypass enforcement</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Superflow 3: Debugging (Memory-Assisted) -->
+            <section id="debugging" class="superflow">
+                <div class="superflow-header">
+                    <h2 class="superflow-title">
+                        <span class="superflow-emoji">🐛</span>
+                        Debugging (Memory-Assisted)
+                        <span class="superflow-type enforcement">Enforced</span>
+                        <span class="priority-badge priority-high">High Priority</span>
+                    </h2>
+                </div>
+
+                <p class="description">
+                    Searches project memory for similar past bugs and solutions before attempting fixes. Integrates with Spotlight MCP to access real-time error data with stack traces and context. Uses systematic 4-phase debugging workflow (investigation → pattern analysis → hypothesis testing → implementation) when encountering new issues. Prevents shotgun debugging by requiring understanding before fixes.
+                </p>
+
+                <div class="trigger-box">
+                    <h3>🎯 How to Trigger</h3>
+                    <div class="trigger-examples">
+                        <div><span class="prompt">👉</span> "there's a bug in the login function"</div>
+                        <div><span class="prompt">👉</span> "error when submitting the form"</div>
+                        <div><span class="prompt">👉</span> "fix the authentication issue"</div>
+                        <div><span class="prompt">👉</span> "TypeError: Cannot read property 'user'"</div>
+                        <div><span class="prompt">👉</span> "the payment processing is broken"</div>
+                    </div>
+                </div>
+
+                <div class="skills-invoked">
+                    <h4>📦 Skills Invoked</h4>
+                    <code>memory-assisted-debugging</code> + <code>systematic-debugging</code>
+                </div>
+
+                <div class="workflow-steps">
+                    <h3>📋 Workflow (8 Steps)</h3>
+                    <ol>
+                        <li><strong>Query Spotlight MCP:</strong> If available, query for real-time error data first (stack traces, context, recent errors)</li>
+                        <li><strong>Extract Error Details:</strong> Get actual error message, stack trace, request context, and environment details</li>
+                        <li><strong>Search Memory:</strong> Use error specifics to search project memory for similar bugs (error message, file, function)</li>
+                        <li><strong>Apply Known Fix:</strong> If similar bug found in memory → apply known solution (saves 2-5 minutes)</li>
+                        <li><strong>Systematic Debugging:</strong> If new issue → use 4-phase workflow (root cause → pattern analysis → hypothesis → test)</li>
+                        <li><strong>Root Cause Investigation:</strong> Understand the "why" before attempting solutions</li>
+                        <li><strong>Implement Fix with Tests:</strong> Add test that reproduces bug, then fix it</li>
+                        <li><strong>Verify Fix Works:</strong> Confirm with empirical evidence (test passes, error gone)</li>
+                    </ol>
+                </div>
+
+                <div class="principles">
+                    <h3>⚡ Iron Laws</h3>
+                    <ul>
+                        <li><strong>Check Spotlight FIRST:</strong> Always query for real-time errors before investigating (if available)</li>
+                        <li><strong>Search memory before fixing:</strong> Don't repeat solutions already tried (check memory first)</li>
+                        <li><strong>Use actual error context:</strong> Search with specific error messages, not generic terms</li>
+                        <li><strong>Understand before attempting:</strong> No shotgun debugging (random changes hoping for fix)</li>
+                        <li><strong>Verify with evidence:</strong> Confirm fix works with test or reproduction case</li>
+                        <li><strong>Record in memory:</strong> Document the bug and solution for future reference</li>
+                    </ul>
+                </div>
+            </section>
+            <!-- Superflow 4: Feature Development (Spec-Kit) -->
+            <section id="feature" class="superflow">
+                <div class="superflow-header">
+                    <h2 class="superflow-title">
+                        <span class="superflow-emoji">🏗️</span>
+                        Feature Development (Spec-Kit)
+                        <span class="superflow-type enforcement">Enforced</span>
+                        <span class="priority-badge priority-medium">Medium Priority</span>
+                    </h2>
+                </div>
+
+                <p class="description">
+                    Orchestrates complete Spec-Driven Development workflow from constitution through implementation. Searches memory for similar past features to avoid reinventing solutions. Ensures full-stack integration (database → API → frontend) before completion. Follows Constitution → Specify → Clarify → Plan → Implement workflow.
+                </p>
+
+                <div class="trigger-box">
+                    <h3>🎯 How to Trigger</h3>
+                    <div class="trigger-examples">
+                        <div><span class="prompt">👉</span> "implement user profile management feature"</div>
+                        <div><span class="prompt">👉</span> "build a notification system"</div>
+                        <div><span class="prompt">👉</span> "create real-time chat functionality"</div>
+                        <div><span class="prompt">👉</span> "add support for file uploads"</div>
+                        <div><span class="prompt">👉</span> "develop payment integration feature"</div>
+                    </div>
+                </div>
+
+                <div class="skills-invoked">
+                    <h4>📦 Skills Invoked</h4>
+                    <code>memory-assisted-spec-kit</code> + <code>spec-kit-orchestrator</code>
+                </div>
+
+                <div class="workflow-steps">
+                    <h3>📋 Workflow (8 Steps)</h3>
+                    <ol>
+                        <li><strong>Memory Search:</strong> Run /recall-feature to check for similar past implementations</li>
+                        <li><strong>Constitution Phase:</strong> Define project constraints, technical requirements, and non-negotiables</li>
+                        <li><strong>Specify Phase:</strong> Write technical requirements, architecture decisions, and data models</li>
+                        <li><strong>Clarify Phase:</strong> Address edge cases, error scenarios, and ambiguities</li>
+                        <li><strong>Plan Phase:</strong> Create implementation steps with dependencies and milestones</li>
+                        <li><strong>Implementation:</strong> Execute the plan with TDD approach (test → code → refactor)</li>
+                        <li><strong>Integration Check:</strong> Run /check-integration to verify DB → API → Frontend flow</li>
+                        <li><strong>Ship Check:</strong> Run /ship-check for comprehensive validation before completion</li>
+                    </ol>
+                </div>
+
+                <div class="principles">
+                    <h3>⚡ Iron Laws</h3>
+                    <ul>
+                        <li><strong>Memory first:</strong> Always check for similar features BEFORE planning</li>
+                        <li><strong>Full workflow required:</strong> Cannot skip phases (Constitution → Specify → Clarify → Plan)</li>
+                        <li><strong>No shortcuts:</strong> Complete spec-kit process is non-negotiable</li>
+                        <li><strong>Integration verification:</strong> Always verify full-stack integration before claiming done</li>
+                        <li><strong>Learn from past:</strong> Apply lessons from similar implementations found in memory</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Superflow 5: UI Development -->
+            <section id="ui" class="superflow">
+                <div class="superflow-header">
+                    <h2 class="superflow-title">
+                        <span class="superflow-emoji">🎨</span>
+                        UI Development
+                        <span class="superflow-type enforcement">Enforced</span>
+                        <span class="priority-badge priority-medium">Medium Priority</span>
+                    </h2>
+                </div>
+
+                <p class="description">
+                    Search-before-build workflow that checks premium UI library (51 screenshots) and shadcn/ui blocks (829 components) before implementing from scratch. Saves 30+ minutes per component by adapting existing solutions. Emphasizes error handling, loading states, and proper UX patterns.
+                </p>
+
+                <div class="trigger-box">
+                    <h3>🎯 How to Trigger</h3>
+                    <div class="trigger-examples">
+                        <div><span class="prompt">👉</span> "create a pricing table component"</div>
+                        <div><span class="prompt">👉</span> "build a testimonial section"</div>
+                        <div><span class="prompt">👉</span> "design a hero section"</div>
+                        <div><span class="prompt">👉</span> "implement a dashboard layout"</div>
+                        <div><span class="prompt">👉</span> "create modal dialog component"</div>
+                    </div>
+                </div>
+
+                <div class="skills-invoked">
+                    <h4>📦 Skills Invoked</h4>
+                    <code>ui-inspiration-finder</code> + <code>using-shadcn-ui</code>
+                </div>
+
+                <div class="workflow-steps">
+                    <h3>📋 Workflow (7 Steps)</h3>
+                    <ol>
+                        <li><strong>Search Premium Library:</strong> Run /find-ui to search 51 premium UI screenshots for matching components</li>
+                        <li><strong>Adapt if Found:</strong> If match found → adapt existing component (saves 30+ minutes)</li>
+                        <li><strong>Check shadcn/ui:</strong> If not found → search shadcn/ui blocks (829 production components)</li>
+                        <li><strong>Plan Error Handling:</strong> Define loading states, error states, and empty states</li>
+                        <li><strong>Implement with UX:</strong> Build with proper loading indicators, error messages, and user feedback</li>
+                        <li><strong>Responsive Design:</strong> Ensure component works across breakpoints (mobile, tablet, desktop)</li>
+                        <li><strong>Accessibility:</strong> Add ARIA labels, keyboard navigation, and screen reader support</li>
+                    </ol>
+                </div>
+
+                <div class="principles">
+                    <h3>⚡ Iron Laws</h3>
+                    <ul>
+                        <li><strong>/find-ui FIRST:</strong> Always check premium library before building (51 screenshots)</li>
+                        <li><strong>shadcn/ui SECOND:</strong> Check 829 production components if not in premium library</li>
+                        <li><strong>Build from scratch LAST:</strong> Only if nothing suitable found in either source</li>
+                        <li><strong>Adapt, don't reinvent:</strong> Saves 30+ minutes per component</li>
+                        <li><strong>Error states required:</strong> Loading, error, and empty states are non-negotiable</li>
+                        <li><strong>Responsive by default:</strong> Must work on mobile, tablet, desktop</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Superflow 6: API Contract Design -->
+            <section id="api" class="superflow">
+                <div class="superflow-header">
+                    <h2 class="superflow-title">
+                        <span class="superflow-emoji">🔌</span>
+                        API Contract Design
+                        <span class="superflow-type enforcement">Enforced</span>
+                        <span class="priority-badge priority-medium">Medium Priority</span>
+                    </h2>
+                </div>
+
+                <p class="description">
+                    Ensures RESTful patterns, consistent contracts, breaking change detection, schema validation, and backward compatibility for maintainable APIs. Contract-first approach prevents integration issues. Uses versioning for breaking changes and provides migration paths.
+                </p>
+
+                <div class="trigger-box">
+                    <h3>🎯 How to Trigger</h3>
+                    <div class="trigger-examples">
+                        <div><span class="prompt">👉</span> "design the user registration API endpoint"</div>
+                        <div><span class="prompt">👉</span> "create payment processing API"</div>
+                        <div><span class="prompt">👉</span> "modify the authentication endpoint"</div>
+                        <div><span class="prompt">👉</span> "add webhook support to the API"</div>
+                        <div><span class="prompt">👉</span> "change the response format for users endpoint"</div>
+                    </div>
+                </div>
+
+                <div class="skills-invoked">
+                    <h4>📦 Skills Invoked</h4>
+                    <code>api-contract-design</code>
+                </div>
+
+                <div class="workflow-steps">
+                    <h3>📋 Workflow (7 Steps)</h3>
+                    <ol>
+                        <li><strong>Analyze Existing:</strong> Review existing API contracts and identify dependencies</li>
+                        <li><strong>Breaking Change Check:</strong> Determine if proposed changes break existing integrations</li>
+                        <li><strong>Versioning Strategy:</strong> If breaking → plan API versioning (v1 → v2)</li>
+                        <li><strong>Backward Compatibility:</strong> Ensure existing clients continue working during transition</li>
+                        <li><strong>Schema Validation:</strong> Define request/response schemas using JSON Schema or similar</li>
+                        <li><strong>Documentation:</strong> Update OpenAPI/Swagger docs with all changes</li>
+                        <li><strong>Migration Path:</strong> Plan how existing clients will migrate to new version</li>
+                    </ol>
+                </div>
+
+                <div class="principles">
+                    <h3>⚡ Iron Laws</h3>
+                    <ul>
+                        <li><strong>CONTRACTS ARE SACRED:</strong> Never break existing contracts without versioning</li>
+                        <li><strong>Always check for breaking changes:</strong> Non-negotiable analysis before implementing</li>
+                        <li><strong>Versioning for breaking changes:</strong> Must increment version (v1 → v2) if breaking</li>
+                        <li><strong>Never break existing integrations:</strong> Backward compatibility required</li>
+                        <li><strong>Schema validation required:</strong> All requests/responses must be validated</li>
+                        <li><strong>Document everything:</strong> OpenAPI/Swagger documentation is mandatory</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Superflow 7: Verification Before Completion -->
+            <section id="verification" class="superflow">
+                <div class="superflow-header">
+                    <h2 class="superflow-title">
+                        <span class="superflow-emoji">✅</span>
+                        Verification Before Completion
+                        <span class="superflow-type enforcement">Enforced</span>
+                        <span class="priority-badge priority-medium">Medium Priority</span>
+                    </h2>
+                </div>
+
+                <p class="description">
+                    Blocks completion claims until fresh evidence is gathered. Runs comprehensive integration checks (database → API → frontend) and validation. Evidence before assertions, always. No cached results allowed. Prevents premature "done" claims.
+                </p>
+
+                <div class="trigger-box">
+                    <h3>🎯 How to Trigger</h3>
+                    <div class="trigger-examples">
+                        <div><span class="prompt">👉</span> "I'm done with the feature, ready to ship"</div>
+                        <div><span class="prompt">👉</span> "feature is complete"</div>
+                        <div><span class="prompt">👉</span> "ready to deploy"</div>
+                        <div><span class="prompt">👉</span> "finished implementing, tests passing"</div>
+                        <div><span class="prompt">👉</span> "completed the work"</div>
+                    </div>
+                </div>
+
+                <div class="skills-invoked">
+                    <h4>📦 Skills Invoked</h4>
+                    <code>verification-before-completion</code> + <code>full-stack-integration-checker</code>
+                </div>
+
+                <div class="workflow-steps">
+                    <h3>📋 Workflow (7 Steps)</h3>
+                    <ol>
+                        <li><strong>Run Integration Check:</strong> Execute /check-integration for full-stack verification (DB → API → Frontend)</li>
+                        <li><strong>Run Ship Check:</strong> Execute /ship-check for comprehensive validation (tests, linting, build)</li>
+                        <li><strong>Gather Fresh Evidence:</strong> Collect actual command output (not cached, not from memory)</li>
+                        <li><strong>Verify Tests Pass:</strong> Confirm ALL tests pass with real test runner output</li>
+                        <li><strong>Check for Gaps:</strong> Verify no unused code, missing CRUD operations, or incomplete features</li>
+                        <li><strong>Error Handling Check:</strong> Confirm proper error handling is implemented</li>
+                        <li><strong>Documentation Review:</strong> Ensure docs are up to date</li>
+                    </ol>
+                </div>
+
+                <div class="principles">
+                    <h3>⚡ Iron Laws</h3>
+                    <ul>
+                        <li><strong>NO COMPLETION WITHOUT EVIDENCE:</strong> Hard blocking (cannot claim done without verification)</li>
+                        <li><strong>Cannot use cached results:</strong> Must run fresh commands and gather new output</li>
+                        <li><strong>Must provide command output:</strong> Actual evidence from /check-integration and /ship-check</li>
+                        <li><strong>Evidence before assertions:</strong> Never claim tests pass without showing output</li>
+                        <li><strong>Full-stack verification:</strong> Database, API, and Frontend must all be checked</li>
+                        <li><strong>No shortcuts:</strong> Cannot skip verification steps</li>
+                    </ul>
+                </div>
+            </section>
+            <!-- Superflow 8: Rapid Prototyping (MVP) -->
+            <section id="mvp" class="superflow">
+                <div class="superflow-header">
+                    <h2 class="superflow-title">
+                        <span class="superflow-emoji">🚀</span>
+                        Rapid Prototyping (MVP)
+                        <span class="superflow-type enforcement">Enforced</span>
+                        <span class="priority-badge priority-medium">Medium Priority</span>
+                    </h2>
+                </div>
+
+                <p class="description">
+                    Optimizes for speed while maintaining quality through strategic build vs buy vs integrate decisions, scope management, and quality gates that don't slow momentum. 6-day cycle approach. Focuses on what NOT to build. Fast ≠ broken.
+                </p>
+
+                <div class="trigger-box">
+                    <h3>🎯 How to Trigger</h3>
+                    <div class="trigger-examples">
+                        <div><span class="prompt">👉</span> "build a quick MVP for task tracking"</div>
+                        <div><span class="prompt">👉</span> "create a prototype for user feedback"</div>
+                        <div><span class="prompt">👉</span> "fast implementation needed"</div>
+                        <div><span class="prompt">👉</span> "proof of concept for authentication"</div>
+                        <div><span class="prompt">👉</span> "need basic version quickly"</div>
+                    </div>
+                </div>
+
+                <div class="skills-invoked">
+                    <h4>📦 Skills Invoked</h4>
+                    <code>rapid-prototyping</code> + <code>ui-inspiration-finder</code>
+                </div>
+
+                <div class="workflow-steps">
+                    <h3>📋 Workflow (7 Steps)</h3>
+                    <ol>
+                        <li><strong>Build vs Buy vs Integrate:</strong> For each component, decide: build from scratch, buy/use existing, or integrate third-party</li>
+                        <li><strong>Search UI Library:</strong> Use /find-ui to find existing UI solutions (avoid rebuilding)</li>
+                        <li><strong>Leverage shadcn/ui:</strong> Use 829 production components for rapid development</li>
+                        <li><strong>Focus on What NOT to Build:</strong> Maximize leverage, minimize custom code</li>
+                        <li><strong>Quality Gates:</strong> Implement with quality checks (fast ≠ broken)</li>
+                        <li><strong>Run Verification:</strong> Use verification-before-completion when done</li>
+                        <li><strong>Document Tech Debt:</strong> Record shortcuts taken for future improvement</li>
+                    </ol>
+                </div>
+
+                <div class="principles">
+                    <h3>⚡ Iron Laws</h3>
+                    <ul>
+                        <li><strong>Focus on what NOT to build:</strong> Identify what can be bought, integrated, or skipped</li>
+                        <li><strong>Build vs Buy decision matrix:</strong> Required for each major component</li>
+                        <li><strong>Leverage existing resources:</strong> Use /find-ui, shadcn/ui before building</li>
+                        <li><strong>Fast ≠ Broken:</strong> Maintain quality gates even when moving quickly</li>
+                        <li><strong>Document tech debt:</strong> Record shortcuts for future iterations</li>
+                        <li><strong>6-day cycles:</strong> Time-boxed iterations with clear scope</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Superflow 9: Security Patterns -->
+            <section id="security" class="superflow">
+                <div class="superflow-header">
+                    <h2 class="superflow-title">
+                        <span class="superflow-emoji">🔐</span>
+                        Security Patterns
+                        <span class="superflow-type enforcement">Enforced</span>
+                        <span class="priority-badge priority-medium">Medium Priority</span>
+                    </h2>
+                </div>
+
+                <p class="description">
+                    Provides OWASP Top 10 framework and defense-in-depth patterns to prevent vulnerabilities. Scans for security issues before implementing fixes. Never trusts client-side data. Validates all inputs. Uses environment variables for secrets.
+                </p>
+
+                <div class="trigger-box">
+                    <h3>🎯 How to Trigger</h3>
+                    <div class="trigger-examples">
+                        <div><span class="prompt">👉</span> "add authentication to the API"</div>
+                        <div><span class="prompt">👉</span> "implement authorization checks"</div>
+                        <div><span class="prompt">👉</span> "secure the payment endpoint"</div>
+                        <div><span class="prompt">👉</span> "validate user input"</div>
+                        <div><span class="prompt">👉</span> "add security headers"</div>
+                    </div>
+                </div>
+
+                <div class="skills-invoked">
+                    <h4>📦 Skills Invoked</h4>
+                    <code>security-patterns</code>
+                </div>
+
+                <div class="workflow-steps">
+                    <h3>📋 Workflow (7 Steps)</h3>
+                    <ol>
+                        <li><strong>Run Security Scan:</strong> Execute /security-scan for comprehensive vulnerability analysis</li>
+                        <li><strong>Authentication Check:</strong> Verify authentication implementation (JWT, sessions, etc.)</li>
+                        <li><strong>Authorization Check:</strong> Ensure proper role-based access control</li>
+                        <li><strong>Input Validation:</strong> Validate and sanitize all user inputs</li>
+                        <li><strong>Secrets Management:</strong> Review environment variables, key rotation, no hardcoded secrets</li>
+                        <li><strong>Security Headers:</strong> Verify CSP, HSTS, X-Frame-Options, etc.</li>
+                        <li><strong>OWASP Top 10:</strong> Apply checklist for common vulnerabilities</li>
+                    </ol>
+                </div>
+
+                <div class="principles">
+                    <h3>⚡ Iron Laws</h3>
+                    <ul>
+                        <li><strong>Scan before fixing:</strong> Always run /security-scan before implementing fixes</li>
+                        <li><strong>NEVER trust client-side data:</strong> All client input is potentially malicious</li>
+                        <li><strong>ALWAYS validate input:</strong> Sanitize, validate, and escape all user inputs</li>
+                        <li><strong>Defense-in-depth:</strong> Multiple security layers, not single point of failure</li>
+                        <li><strong>Secrets in environment:</strong> Never hardcode secrets, use env vars</li>
+                        <li><strong>OWASP Top 10 compliance:</strong> Check against common vulnerabilities</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Superflow 10: Performance Optimization -->
+            <section id="performance" class="superflow">
+                <div class="superflow-header">
+                    <h2 class="superflow-title">
+                        <span class="superflow-emoji">⚡</span>
+                        Performance Optimization
+                        <span class="superflow-type enforcement">Enforced</span>
+                        <span class="priority-badge priority-medium">Medium Priority</span>
+                    </h2>
+                </div>
+
+                <p class="description">
+                    Systematic profiling and optimization methodology for backend, frontend, and database performance. Profile first, optimize second. Measure impact always. Uses 80/20 rule: optimize highest-impact bottlenecks first. No guessing allowed.
+                </p>
+
+                <div class="trigger-box">
+                    <h3>🎯 How to Trigger</h3>
+                    <div class="trigger-examples">
+                        <div><span class="prompt">👉</span> "the dashboard is loading slowly"</div>
+                        <div><span class="prompt">👉</span> "optimize database queries"</div>
+                        <div><span class="prompt">👉</span> "improve API response time"</div>
+                        <div><span class="prompt">👉</span> "reduce page load time"</div>
+                        <div><span class="prompt">👉</span> "speed up the application"</div>
+                    </div>
+                </div>
+
+                <div class="skills-invoked">
+                    <h4>📦 Skills Invoked</h4>
+                    <code>performance-optimization</code>
+                </div>
+
+                <div class="workflow-steps">
+                    <h3>📋 Workflow (7 Steps)</h3>
+                    <ol>
+                        <li><strong>Run Performance Check:</strong> Execute /perf-check to identify bottlenecks</li>
+                        <li><strong>Profile Before:</strong> Measure current performance (baseline metrics)</li>
+                        <li><strong>Identify Bottlenecks:</strong> Find highest-impact issues using 80/20 rule</li>
+                        <li><strong>Optimize Bottlenecks:</strong> Fix highest-impact areas first</li>
+                        <li><strong>Measure After:</strong> Collect metrics after optimization (comparison)</li>
+                        <li><strong>Verify No Regressions:</strong> Run tests to ensure no functionality broken</li>
+                        <li><strong>Document Changes:</strong> Record optimizations and trade-offs made</li>
+                    </ol>
+                </div>
+
+                <div class="principles">
+                    <h3>⚡ Iron Laws</h3>
+                    <ul>
+                        <li><strong>PROFILE FIRST, OPTIMIZE SECOND:</strong> No optimization without profiling data</li>
+                        <li><strong>NO guessing:</strong> Always measure, never assume where bottlenecks are</li>
+                        <li><strong>ALWAYS measure impact:</strong> Before/after metrics required</li>
+                        <li><strong>Fix bottlenecks, not symptoms:</strong> Address root causes</li>
+                        <li><strong>80/20 rule:</strong> 80% of performance issues from 20% of code</li>
+                        <li><strong>Test for regressions:</strong> Ensure optimizations don't break functionality</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Superflow 11: Dependency Management -->
+            <section id="dependencies" class="superflow">
+                <div class="superflow-header">
+                    <h2 class="superflow-title">
+                        <span class="superflow-emoji">📦</span>
+                        Dependency Management
+                        <span class="superflow-type enforcement">Enforced</span>
+                        <span class="priority-badge priority-medium">Medium Priority</span>
+                    </h2>
+                </div>
+
+                <p class="description">
+                    Systematic approach to dependency selection, updates, and security. Incremental updates with testing. One package at a time to isolate failures. Reviews changelogs for breaking changes. Separates security from feature updates.
+                </p>
+
+                <div class="trigger-box">
+                    <h3>🎯 How to Trigger</h3>
+                    <div class="trigger-examples">
+                        <div><span class="prompt">👉</span> "update all npm dependencies"</div>
+                        <div><span class="prompt">👉</span> "upgrade React to latest version"</div>
+                        <div><span class="prompt">👉</span> "fix security vulnerabilities"</div>
+                        <div><span class="prompt">👉</span> "add a new package dependency"</div>
+                        <div><span class="prompt">👉</span> "update outdated packages"</div>
+                    </div>
+                </div>
+
+                <div class="skills-invoked">
+                    <h4>📦 Skills Invoked</h4>
+                    <code>dependency-management</code>
+                </div>
+
+                <div class="workflow-steps">
+                    <h3>📋 Workflow (7 Steps)</h3>
+                    <ol>
+                        <li><strong>Check Current State:</strong> Run npm outdated and npm audit for status</li>
+                        <li><strong>Update Strategy:</strong> Use dependency-management skill for systematic approach</li>
+                        <li><strong>Review Changelogs:</strong> Check for breaking changes in each package</li>
+                        <li><strong>Update ONE Package:</strong> Update single package, not batch</li>
+                        <li><strong>Test After Update:</strong> Run full test suite after each update</li>
+                        <li><strong>Isolate Failures:</strong> If tests break, rollback immediately and investigate</li>
+                        <li><strong>Verify Integration:</strong> Run /check-integration when all updates complete</li>
+                    </ol>
+                </div>
+
+                <div class="principles">
+                    <h3>⚡ Iron Laws</h3>
+                    <ul>
+                        <li><strong>ONE package at a time:</strong> Never batch updates (isolate failures)</li>
+                        <li><strong>TEST after each update:</strong> Full test suite must pass before next update</li>
+                        <li><strong>NEVER batch security + feature:</strong> Separate security from feature updates</li>
+                        <li><strong>Review changelogs:</strong> Check for breaking changes before updating</li>
+                        <li><strong>Immediate rollback:</strong> If tests fail, rollback and investigate</li>
+                        <li><strong>Document updates:</strong> Record what was updated and why</li>
+                    </ul>
+                </div>
+            </section>
+            <!-- Superflow 12: Learning/Onboarding -->
+            <section id="learning" class="superflow">
+                <div class="superflow-header">
+                    <h2 class="superflow-title">
+                        <span class="superflow-emoji">🎓</span>
+                        Learning/Onboarding
+                        <span class="superflow-type suggestion">Suggestion</span>
+                        <span class="priority-badge priority-low">Lower Priority</span>
+                    </h2>
+                </div>
+
+                <p class="description">
+                    Provides comprehensive explanations with historical context, concrete examples from the codebase, and interactive learning. Creates memory observations for future reference. Shows, doesn't just tell. Uses examples from THIS codebase, not generic tutorials.
+                </p>
+
+                <div class="trigger-box">
+                    <h3>🎯 How to Trigger</h3>
+                    <div class="trigger-examples">
+                        <div><span class="prompt">👉</span> "help me learn how this project works"</div>
+                        <div><span class="prompt">👉</span> "teach me the architecture"</div>
+                        <div><span class="prompt">👉</span> "show me how authentication works"</div>
+                        <div><span class="prompt">👉</span> "explain the project structure"</div>
+                        <div><span class="prompt">👉</span> "guide me through the codebase"</div>
+                    </div>
+                </div>
+
+                <div class="skills-invoked">
+                    <h4>📦 Commands Used</h4>
+                    <code>/explain-code</code> + <code>/recall-pattern</code>
+                </div>
+
+                <div class="workflow-steps">
+                    <h3>📋 Workflow (6 Steps)</h3>
+                    <ol>
+                        <li><strong>Historical Context:</strong> Run /explain-code to understand why code exists</li>
+                        <li><strong>Pattern Analysis:</strong> Use /recall-pattern to show similar implementations</li>
+                        <li><strong>Architectural Overview:</strong> Explain high-level structure and design decisions</li>
+                        <li><strong>Concrete Examples:</strong> Show actual code from THIS codebase (not generic)</li>
+                        <li><strong>Practice Exercises:</strong> Suggest hands-on tasks or next steps</li>
+                        <li><strong>Memory Observation:</strong> Create observation for future reference</li>
+                    </ol>
+                </div>
+
+                <div class="principles">
+                    <h3>⚡ Learning Principles</h3>
+                    <ul>
+                        <li><strong>Show, don't just tell:</strong> Provide concrete examples, not abstract explanations</li>
+                        <li><strong>THIS codebase only:</strong> Use actual code examples from the project</li>
+                        <li><strong>Build on existing knowledge:</strong> Connect new concepts to what user knows</li>
+                        <li><strong>Interactive approach:</strong> Ask clarifying questions, make it dialogue</li>
+                        <li><strong>Create memory:</strong> Document learnings for future reference</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Superflow 13: Code Explanation -->
+            <section id="code-explanation" class="superflow">
+                <div class="superflow-header">
+                    <h2 class="superflow-title">
+                        <span class="superflow-emoji">📖</span>
+                        Code Explanation
+                        <span class="superflow-type enforcement">Enforced</span>
+                        <span class="priority-badge priority-low">Higher Specificity</span>
+                    </h2>
+                </div>
+
+                <p class="description">
+                    Provides deep code explanations with historical context (why code exists), design rationale (why this approach), and concrete examples. Searches memory for past decisions. Triggers on code-specific requests (function, class, method, module).
+                </p>
+
+                <div class="trigger-box">
+                    <h3>🎯 How to Trigger</h3>
+                    <div class="trigger-examples">
+                        <div><span class="prompt">👉</span> "explain what the middleware function does"</div>
+                        <div><span class="prompt">👉</span> "what does this class do?"</div>
+                        <div><span class="prompt">👉</span> "how does the authentication module work?"</div>
+                        <div><span class="prompt">👉</span> "explain this code file"</div>
+                        <div><span class="prompt">👉</span> "what does the handler method do?"</div>
+                    </div>
+                </div>
+
+                <div class="skills-invoked">
+                    <h4>📦 Commands Used</h4>
+                    <code>/explain-code</code>
+                </div>
+
+                <div class="workflow-steps">
+                    <h3>📋 Workflow (5 Steps)</h3>
+                    <ol>
+                        <li><strong>Run /explain-code:</strong> Execute command to gather historical context</li>
+                        <li><strong>Design Rationale:</strong> Explain why this approach was chosen</li>
+                        <li><strong>Architecture Decisions:</strong> Show how it fits into larger system</li>
+                        <li><strong>Dependencies & Relationships:</strong> Explain connections to other code</li>
+                        <li><strong>Memory Observation:</strong> Create observation for future reference</li>
+                    </ol>
+                </div>
+
+                <div class="principles">
+                    <h3>⚡ Explanation Principles</h3>
+                    <ul>
+                        <li><strong>Show, don't tell:</strong> Concrete examples from the code</li>
+                        <li><strong>Historical context:</strong> Why this code exists (not just what it does)</li>
+                        <li><strong>Design rationale:</strong> Why this approach vs alternatives</li>
+                        <li><strong>THIS codebase:</strong> Use actual examples from project</li>
+                        <li><strong>Memory search:</strong> Check for past decisions and lessons</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Superflow 14: Pattern Recall -->
+            <section id="pattern-recall" class="superflow">
+                <div class="superflow-header">
+                    <h2 class="superflow-title">
+                        <span class="superflow-emoji">🔍</span>
+                        Pattern Recall
+                        <span class="superflow-type enforcement">Enforced</span>
+                        <span class="priority-badge priority-low">Medium Specificity</span>
+                    </h2>
+                </div>
+
+                <p class="description">
+                    Searches project memory for implementation patterns used in the past. Shows what worked (successful solutions) and what didn't (failed approaches). Helps avoid repeated mistakes and leverage successful patterns. Builds organizational knowledge over time.
+                </p>
+
+                <div class="trigger-box">
+                    <h3>🎯 How to Trigger</h3>
+                    <div class="trigger-examples">
+                        <div><span class="prompt">👉</span> "how did we handle file uploads before?"</div>
+                        <div><span class="prompt">👉</span> "what's the pattern for API errors?"</div>
+                        <div><span class="prompt">👉</span> "how do we usually implement caching?"</div>
+                        <div><span class="prompt">👉</span> "recall pattern for authentication"</div>
+                        <div><span class="prompt">👉</span> "how did we solve this before?"</div>
+                    </div>
+                </div>
+
+                <div class="skills-invoked">
+                    <h4>📦 Commands Used</h4>
+                    <code>/recall-pattern</code>
+                </div>
+
+                <div class="workflow-steps">
+                    <h3>📋 Workflow (4 Steps)</h3>
+                    <ol>
+                        <li><strong>Run /recall-pattern:</strong> Query project memory for similar patterns</li>
+                        <li><strong>Show Successful Patterns:</strong> Display what worked well in past</li>
+                        <li><strong>Show Failed Approaches:</strong> Highlight what didn't work (avoid repeating)</li>
+                        <li><strong>Apply to Current:</strong> Connect historical patterns to current situation</li>
+                    </ol>
+                </div>
+
+                <div class="principles">
+                    <h3>⚡ Memory Principles</h3>
+                    <ul>
+                        <li><strong>Search before implementing:</strong> Check for existing solutions first</li>
+                        <li><strong>Learn from success:</strong> Apply what worked in the past</li>
+                        <li><strong>Avoid past mistakes:</strong> Don't repeat failed approaches</li>
+                        <li><strong>Build knowledge:</strong> Accumulate organizational learning over time</li>
+                        <li><strong>Pattern recognition:</strong> Identify similar problems and solutions</li>
+                    </ul>
+                </div>
+            </section>
+        </div>
+
+        <footer>
+            <h3>Developer Skills Plugin</h3>
+            <p>Intelligent Workflow Automation System</p>
+            <p style="margin-top: 20px; opacity: 0.8;">
+                14/14 Superflows Active | 100% Test Pass Rate | Production Ready
+            </p>
+            <p style="margin-top: 10px;">
+                <a href="superflows-cookbook.html">Quick Reference Cookbook</a> |
+                <a href="https://github.com/anthropics/claude-code" target="_blank">Documentation</a>
+            </p>
+            <p style="margin-top: 20px; font-size: 0.9em; opacity: 0.7;">
+                Generated: 2025-10-31 | Version: 2.0
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

@@ -22,6 +22,7 @@ fi
 CONTEXT=""
 
 # Pattern detection flags
+COPY_SITE_PATTERN="copy.*site|clone.*site|replicate.*site|clone.*website|copy.*website|replicate.*website|pixel.*perfect.*copy|pixel.*perfect.*clone|extract.*styl|copy.*this.*page|clone.*this.*page|replicate.*this.*page"
 REFACTOR_PATTERN="refactor|rewrite|restructure|clean up|cleanup|improve.*code|modernize|simplify|tidy|organize|reorganize|optimize.*code|make.*better|make.*cleaner"
 BUG_PATTERN="bug|error|issue|problem|fail|broken|not working|crash|exception|debug|incorrect|wrong|unexpected|doesn't work|won't work|fix.*error|fix.*issue|not responding"
 FEATURE_PATTERN="implement|build|create|add.*(feature|functionality|component|system)|develop|make.*new|new.*feature|want to add|need to build|add support for"
@@ -29,8 +30,8 @@ UI_PATTERN="ui|component|interface|design|hero|pricing|testimonial|navbar|form|m
 API_PATTERN="api|endpoint|route|controller.*(change|modify|update|add|remove)|rest.*api|graphql|webhook|request|response"
 COMPLETE_PATTERN="done|complete|finished|ready|ship it|deploy|push.*prod|release"
 MVP_PATTERN="mvp|prototype|poc|proof of concept|quick|fast|rapid|minimum viable|quick build|basic version|simple version|fast.*implementation"
-EXPLAIN_PATTERN="what does|explain|how does|understand|why does|describe|tell me about|what's.*this|what is"
-PATTERN_RECALL="how did we|how do we|what's the pattern|what pattern|similar.*before|did we.*before"
+EXPLAIN_PATTERN="what does.*(function|class|method|code|file)|explain.*(function|class|method|code|file|module|middleware|handler)|how does.*(function|class|code|work)"
+PATTERN_RECALL="how did we|how do we|what's the pattern|what pattern|similar.*before|did we.*before|recall.*pattern"
 
 # Helper function to write active superflow to session file
 write_active_superflow() {
@@ -86,6 +87,86 @@ add_header() {
 "
     fi
 }
+
+# Check for copy-site requests (HIGHEST PRIORITY - very specific pattern)
+if echo "$USER_PROMPT" | grep -qiE "$COPY_SITE_PATTERN"; then
+    write_active_superflow "🎨 Pixel-Perfect Site Copy"
+    add_header
+
+    CONTEXT="${CONTEXT}## 🎨 PIXEL-PERFECT SITE COPY SUPERFLOW: ACTIVE
+
+**IMMEDIATE ACTION #1 - INVOKE SKILL NOW:**
+BEFORE ANY OTHER ACTION, execute this command:
+\`\`\`
+Skill(command: 'pixel-perfect-site-copy')
+\`\`\`
+
+**IMMEDIATE ACTION #2 - OUTPUT ACTIVATION MESSAGE:**
+\"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## 🎨 PIXEL-PERFECT SITE COPY: ACTIVE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+I will follow the complete pixel-perfect site copy workflow:
+1. Verify Chrome DevTools MCP is available
+2. Connect to target URL and extract computed styles
+3. Organize screenshot storage with standardized structure
+4. Capture screenshots at multiple breakpoints
+5. Generate comprehensive 17-section style guide
+6. Implement pixel-perfect replica using Tailwind CSS
+7. Validate visual equivalence against screenshots
+
+**Extended Thinking**: Enabled for complex visual hierarchies, measurement validation, and responsive behavior analysis.
+
+Starting with Chrome DevTools MCP verification...\"
+
+**IMMEDIATE ACTION #3 - CREATE TODO LIST:**
+Use TodoWrite with all workflow steps:
+- Verify Chrome DevTools MCP availability (run verify-chrome-devtools-mcp.sh)
+- Connect to target URL using DevTools MCP
+- Extract computed styles for all major components
+- Organize screenshot storage (run organize_screenshots.py)
+- Capture screenshots at breakpoints (320px, 768px, 1024px, 1440px)
+- Generate STYLE_GUIDE.md with 17 sections
+- Implement HTML/Tailwind replica
+- Validate pixel-perfect quality against screenshots
+- Deliver complete package (style guide, implementation, screenshots)
+
+**IMMEDIATE ACTION #3b - CONSIDER AGENT FOR COMPLEX SITES:**
+For large/complex sites (e.g., Stripe, Vercel), consider using Task tool with subagent_type='Explore' to:
+- Systematically map all sections and components
+- Extract styles methodically across the entire site
+- Handle multi-page extraction (homepage, pricing, docs, etc.)
+
+**IMMEDIATE ACTION #4 - VERIFY CHROME DEVTOOLS MCP:**
+Check if Chrome DevTools MCP is configured and available.
+If not available, inform user: \"This workflow requires Chrome DevTools MCP. Please configure it in .mcp.json\"
+
+**IRON LAW: PIXEL-PERFECT QUALITY**
+- Measure, don't estimate (use DevTools Computed values)
+- Extract, don't approximate (exact hex codes, exact fonts)
+- Compare, don't assume (validate against screenshots)
+- Document, don't omit (complete style guide)
+- Replicate, don't redesign (preserve original design)
+
+**QUALITY STANDARDS:**
+❌ \"This looks about right\" → ✅ \"Matches computed value of 16.8px line-height\"
+❌ \"The spacing feels good\" → ✅ \"Margin-bottom is 24px from DevTools\"
+❌ \"It's close enough\" → ✅ \"It's pixel-perfect\"
+
+**DELIVERABLES:**
+1. STYLE_GUIDE.md (17 sections with extracted values)
+2. index.html (complete HTML/Tailwind implementation)
+3. Screenshots (visual comparison original vs. replica)
+4. Documentation (challenges, limitations, deviations)
+
+**WORKFLOW PHASES:**
+Phase 1: Site Inspection & Style Extraction
+Phase 2: Style Guide Generation
+Phase 3: Implementation
+Phase 4: Quality Assurance
+
+"
+fi
 
 # Check for refactoring (ENFORCED - Iron Law)
 if echo "$USER_PROMPT" | grep -qiE "$REFACTOR_PATTERN"; then
@@ -323,7 +404,7 @@ Skill(command: 'api-contract-design')
 
 **IMMEDIATE ACTION #2 - OUTPUT ACTIVATION MESSAGE:**
 \"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-## 🔌 API CONTRACT DESIGN: ACTIVE
+## 🔌 API CONTRACT DESIGN SUPERFLOW: ACTIVE
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 I will follow the complete API design process:
@@ -364,7 +445,7 @@ Skill(command: 'verification-before-completion')
 
 **IMMEDIATE ACTION #2 - OUTPUT ACTIVATION MESSAGE:**
 \"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-## ✅ VERIFICATION PROTOCOL: ACTIVE (ENFORCED)
+## ✅ VERIFICATION BEFORE COMPLETION SUPERFLOW: ACTIVE (ENFORCED)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 I will NOT mark work as complete until I:
@@ -402,7 +483,7 @@ Skill(command: 'rapid-prototyping')
 
 **IMMEDIATE ACTION #2 - OUTPUT ACTIVATION MESSAGE:**
 \"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-## 🚀 RAPID PROTOTYPING: ACTIVE
+## 🚀 RAPID PROTOTYPING SUPERFLOW: ACTIVE
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 I will follow the MVP development strategy:
@@ -440,7 +521,7 @@ Skill(command: 'security-patterns')
 
 **IMMEDIATE ACTION #2 - OUTPUT ACTIVATION MESSAGE:**
 \"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-## 🔐 SECURITY HARDENING: ACTIVE
+## 🔐 SECURITY PATTERNS SUPERFLOW: ACTIVE
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 I will follow the complete security review process:
@@ -480,7 +561,7 @@ Skill(command: 'performance-optimization')
 
 **IMMEDIATE ACTION #2 - OUTPUT ACTIVATION MESSAGE:**
 \"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-## ⚡ PERFORMANCE OPTIMIZATION: ACTIVE
+## ⚡ PERFORMANCE OPTIMIZATION SUPERFLOW: ACTIVE
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 I will follow systematic profiling and optimization:
@@ -520,7 +601,7 @@ Skill(command: 'dependency-management')
 
 **IMMEDIATE ACTION #2 - OUTPUT ACTIVATION MESSAGE:**
 \"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-## 📦 DEPENDENCY UPDATE: ACTIVE
+## 📦 DEPENDENCY MANAGEMENT SUPERFLOW: ACTIVE
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 I will follow systematic update process:
@@ -548,7 +629,75 @@ Actually run npm audit and npm outdated.
 "
 fi
 
-# Check for learning/explanation requests
+# Check for code explanation requests (HIGHER PRIORITY - more specific than learning)
+if echo "$USER_PROMPT" | grep -qiE "$EXPLAIN_PATTERN"; then
+    write_active_superflow "📖 Code Explanation"
+    add_header
+    CONTEXT="${CONTEXT}## 📖 Code Explanation Workflow
+
+**IMMEDIATE ACTION #1 - RUN COMMAND:**
+Execute: \`SlashCommand(command: '/explain-code')\`
+
+**IMMEDIATE ACTION #2 - OUTPUT ACTIVATION MESSAGE:**
+\"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## 📖 CODE EXPLANATION SUPERFLOW: ACTIVE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+I will provide comprehensive code explanation:
+1. Run /explain-code for historical context
+2. Show design rationale and architecture decisions
+3. Provide concrete examples from the codebase
+4. Explain dependencies and relationships
+5. Create memory observation for future reference
+
+Starting with code analysis...\"
+
+**IMMEDIATE ACTION #3 - CREATE TODO LIST:**
+Use TodoWrite with all 5 steps above.
+
+**EXPLANATION PRINCIPLES:**
+- Show, don't just tell
+- Historical context (why code exists)
+- Design rationale (why this approach)
+- Concrete examples from THIS codebase
+
+"
+fi
+
+# Check for pattern recall (HIGHER PRIORITY - specific memory query)
+if echo "$USER_PROMPT" | grep -qiE "$PATTERN_RECALL"; then
+    write_active_superflow "🔍 Pattern Recall"
+    add_header
+    CONTEXT="${CONTEXT}## 🔍 Pattern Recall Workflow
+
+**IMMEDIATE ACTION #1 - RUN COMMAND:**
+Execute: \`SlashCommand(command: '/recall-pattern')\`
+
+**IMMEDIATE ACTION #2 - OUTPUT ACTIVATION MESSAGE:**
+\"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## 🔍 PATTERN RECALL SUPERFLOW: ACTIVE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+I will search project memory for implementation patterns:
+1. Run /recall-pattern to query memory
+2. Find similar past implementations
+3. Show what worked (and what didn't)
+4. Apply learnings to current situation
+
+Starting with memory search...\"
+
+**IMMEDIATE ACTION #3 - CREATE TODO LIST:**
+Use TodoWrite with all 4 steps above.
+
+**MEMORY PRINCIPLES:**
+- Search before implementing
+- Learn from past solutions
+- Avoid repeating mistakes
+
+"
+fi
+
+# Check for learning/explanation requests (LOWER PRIORITY - catches broader patterns)
 LEARNING_PATTERN="learn|teach me|how does.*work|explain|understand|what is|show me how|tutorial|guide|documentation|best practice|how to|walk.*through|show.*example"
 if echo "$USER_PROMPT" | grep -qiE "$LEARNING_PATTERN"; then
     write_active_superflow "🎓 Learning"
@@ -557,7 +706,7 @@ if echo "$USER_PROMPT" | grep -qiE "$LEARNING_PATTERN"; then
 
 **IMMEDIATE ACTION #1 - OUTPUT ACTIVATION MESSAGE:**
 \"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-## 🎓 LEARNING MODE: ACTIVE
+## 🎓 LEARNING/ONBOARDING SUPERFLOW: ACTIVE
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 I will provide comprehensive explanation:
@@ -582,29 +731,6 @@ Actually run /explain-code and /recall-pattern for context.
 - Build on existing knowledge
 - Make it interactive - ask clarifying questions
 - Create memory observation when done
-
-"
-fi
-
-# Check for code explanation requests
-if echo "$USER_PROMPT" | grep -qiE "$EXPLAIN_PATTERN"; then
-    add_header
-    CONTEXT="${CONTEXT}## 📖 Code Explanation Available
-
-Suggest: \`/explain-code\` for comprehensive understanding with:
-- Historical context (why code exists)
-- Design rationale
-- Architecture decisions
-
-"
-fi
-
-# Check for pattern recall
-if echo "$USER_PROMPT" | grep -qiE "$PATTERN_RECALL"; then
-    add_header
-    CONTEXT="${CONTEXT}## 🔍 Pattern Recall
-
-Suggest: \`/recall-pattern\` to search project memory for implementation patterns
 
 "
 fi

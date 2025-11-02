@@ -47,6 +47,7 @@ Returns clear verdict: ✅ **Ready to ship** or ❌ **Gaps found with checklist*
 
 ### Cross-Cutting Concerns
 - [ ] Tests exist and pass (unit, integration, e2e)
+- [ ] Mock data scan clean (no test artifacts)
 - [ ] No hardcoded secrets (API keys, passwords)
 - [ ] No console.log/debugger statements
 - [ ] Constitution principles followed
@@ -74,8 +75,9 @@ graph TD
 This command orchestrates multiple skills:
 1. **full-stack-integration-checker** - Main validation engine
 2. **verification-before-completion** - Evidence-based checks
-3. **spec-kit-orchestrator** (validation phase) - Spec criteria check
-4. **memory-assisted-debugging** (optional) - Check for known issues
+3. **mock-data-removal** - Systematic test artifact detection
+4. **spec-kit-orchestrator** (validation phase) - Spec criteria check
+5. **memory-assisted-debugging** (optional) - Check for known issues
 
 ## Step-by-Step Execution
 

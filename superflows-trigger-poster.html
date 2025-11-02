@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Superflow Trigger Keywords Poster</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        @page {
+            size: A3 landscape;
+            margin: 20mm;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px;
+            min-height: 100vh;
+        }
+        
+        .poster {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 30px 100px rgba(0,0,0,0.4);
+            padding: 60px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 4px solid #667eea;
+        }
+        
+        .header h1 {
+            font-size: 3.5em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            font-weight: 900;
+            letter-spacing: -1px;
+        }
+        
+        .header .subtitle {
+            font-size: 1.3em;
+            color: #6c757d;
+            font-weight: 500;
+        }
+        
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-num {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+        
+        .card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-left: 6px solid #667eea;
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), transparent);
+            border-radius: 0 16px 0 100%;
+        }
+        
+        .card.priority-high { border-left-color: #fc8181; }
+        .card.priority-medium { border-left-color: #fbd38d; }
+        .card.priority-low { border-left-color: #9ae6b4; }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .emoji {
+            font-size: 2.5em;
+            line-height: 1;
+        }
+        
+        .card-title {
+            flex: 1;
+        }
+        
+        .card-title h3 {
+            font-size: 1.3em;
+            color: #2d3748;
+            margin-bottom: 3px;
+            font-weight: 700;
+        }
+        
+        .card-title .type {
+            font-size: 0.75em;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+        
+        .priority-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .badge-high { background: #fc8181; color: white; }
+        .badge-medium { background: #fbd38d; color: #744210; }
+        .badge-low { background: #9ae6b4; color: #22543d; }
+        
+        .triggers {
+            background: #f7fafc;
+            border-radius: 10px;
+            padding: 15px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .triggers h4 {
+            font-size: 0.85em;
+            color: #667eea;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+        
+        .trigger-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .trigger-list li {
+            padding: 6px 0;
+            color: #4a5568;
+            font-size: 0.9em;
+            position: relative;
+            padding-left: 18px;
+            line-height: 1.4;
+        }
+        
+        .trigger-list li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+        
+        .trigger-keyword {
+            background: linear-gradient(135deg, #667eea15, #764ba215);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+        
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            padding-top: 30px;
+            border-top: 3px solid #e2e8f0;
+        }
+        
+        .footer-content {
+            color: #718096;
+            font-size: 0.95em;
+        }
+        
+        .footer-title {
+            font-size: 1.2em;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9em;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+        
+        .color-high { background: #fc8181; }
+        .color-medium { background: #fbd38d; }
+        .color-low { background: #9ae6b4; }
+        
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .poster {
+                box-shadow: none;
+                padding: 40px;
+            }
+            
+            .card {
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+        }
+        
+        @media (max-width: 1200px) {
+            .grid {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="poster">
+        <div class="header">
+            <h1>🎯 Superflow Trigger Keywords</h1>
+            <p class="subtitle">Quick Reference Poster - All 14 Workflows</p>
+            
+            <div class="stats-bar">
+                <div class="stat">
+                    <span class="stat-num">14</span>
+                    <span class="stat-label">Superflows</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-num">3</span>
+                    <span class="stat-label">Priorities</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-num">70+</span>
+                    <span class="stat-label">Triggers</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid">
+            <!-- Card 1: Pixel-Perfect Site Copy -->
+            <div class="card priority-high">
+                <span class="priority-badge badge-high">Highest</span>
+                <div class="card-header">
+                    <span class="emoji">🎨</span>
+                    <div class="card-title">
+                        <h3>Pixel-Perfect Site Copy</h3>
+                        <div class="type">Enforced • Chrome DevTools MCP</div>
+                    </div>
+                </div>
+                <div class="triggers">
+                    <h4>Trigger Keywords:</h4>
+                    <ul class="trigger-list">
+                        <li><span class="trigger-keyword">copy site</span> https://...</li>
+                        <li><span class="trigger-keyword">clone website</span> https://...</li>
+                        <li><span class="trigger-keyword">replicate</span> this page</li>
+                        <li><span class="trigger-keyword">pixel perfect</span> copy</li>
+                        <li><span class="trigger-keyword">extract styling</span> from</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 2: Refactoring Safety -->
+            <div class="card priority-high">
+                <span class="priority-badge badge-high">Highest</span>
+                <div class="card-header">
+                    <span class="emoji">🛡️</span>
+                    <div class="card-title">
+                        <h3>Refactoring Safety</h3>
+                        <div class="type">Enforced • Blocks Without Tests</div>
+                    </div>
+                </div>
+                <div class="triggers">
+                    <h4>Trigger Keywords:</h4>
+                    <ul class="trigger-list">
+                        <li><span class="trigger-keyword">refactor</span> the module</li>
+                        <li><span class="trigger-keyword">clean up</span> the code</li>
+                        <li><span class="trigger-keyword">restructure</span> the API</li>
+                        <li><span class="trigger-keyword">improve</span> code quality</li>
+                        <li><span class="trigger-keyword">rewrite</span> for clarity</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 3: Debugging -->
+            <div class="card priority-high">
+                <span class="priority-badge badge-high">Highest</span>
+                <div class="card-header">
+                    <span class="emoji">🐛</span>
+                    <div class="card-title">
+                        <h3>Debugging</h3>
+                        <div class="type">Enforced • Memory + Spotlight MCP</div>
+                    </div>
+                </div>
+                <div class="triggers">
+                    <h4>Trigger Keywords:</h4>
+                    <ul class="trigger-list">
+                        <li><span class="trigger-keyword">bug</span> in the function</li>
+                        <li><span class="trigger-keyword">error</span> when submitting</li>
+                        <li><span class="trigger-keyword">fix</span> the issue</li>
+                        <li><span class="trigger-keyword">broken</span> payment</li>
+                        <li><span class="trigger-keyword">TypeError</span> / exception</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 4: Feature Development -->
+            <div class="card priority-medium">
+                <span class="priority-badge badge-medium">Medium</span>
+                <div class="card-header">
+                    <span class="emoji">🏗️</span>
+                    <div class="card-title">
+                        <h3>Feature Development</h3>
+                        <div class="type">Enforced • Spec-Kit Workflow</div>
+                    </div>
+                </div>
+                <div class="triggers">
+                    <h4>Trigger Keywords:</h4>
+                    <ul class="trigger-list">
+                        <li><span class="trigger-keyword">implement</span> user profiles</li>
+                        <li><span class="trigger-keyword">build</span> notification system</li>
+                        <li><span class="trigger-keyword">create</span> chat functionality</li>
+                        <li><span class="trigger-keyword">add support for</span> uploads</li>
+                        <li><span class="trigger-keyword">develop</span> payment integration</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 5: UI Development -->
+            <div class="card priority-medium">
+                <span class="priority-badge badge-medium">Medium</span>
+                <div class="card-header">
+                    <span class="emoji">🎨</span>
+                    <div class="card-title">
+                        <h3>UI Development</h3>
+                        <div class="type">Enforced • Search Before Build</div>
+                    </div>
+                </div>
+                <div class="triggers">
+                    <h4>Trigger Keywords:</h4>
+                    <ul class="trigger-list">
+                        <li><span class="trigger-keyword">create</span> pricing table</li>
+                        <li><span class="trigger-keyword">build</span> testimonial section</li>
+                        <li><span class="trigger-keyword">design</span> hero section</li>
+                        <li><span class="trigger-keyword">implement</span> dashboard</li>
+                        <li><span class="trigger-keyword">modal</span> / <span class="trigger-keyword">dialog</span> / <span class="trigger-keyword">card</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 6: API Contract Design -->
+            <div class="card priority-medium">
+                <span class="priority-badge badge-medium">Medium</span>
+                <div class="card-header">
+                    <span class="emoji">🔌</span>
+                    <div class="card-title">
+                        <h3>API Contract Design</h3>
+                        <div class="type">Enforced • Contracts Are Sacred</div>
+                    </div>
+                </div>
+                <div class="triggers">
+                    <h4>Trigger Keywords:</h4>
+                    <ul class="trigger-list">
+                        <li><span class="trigger-keyword">design</span> registration endpoint</li>
+                        <li><span class="trigger-keyword">create</span> payment API</li>
+                        <li><span class="trigger-keyword">modify</span> auth endpoint</li>
+                        <li><span class="trigger-keyword">add webhook</span> support</li>
+                        <li><span class="trigger-keyword">API</span> / <span class="trigger-keyword">endpoint</span> / <span class="trigger-keyword">route</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 7: Verification -->
+            <div class="card priority-medium">
+                <span class="priority-badge badge-medium">Medium</span>
+                <div class="card-header">
+                    <span class="emoji">✅</span>
+                    <div class="card-title">
+                        <h3>Verification</h3>
+                        <div class="type">Enforced • Evidence Required</div>
+                    </div>
+                </div>
+                <div class="triggers">
+                    <h4>Trigger Keywords:</h4>
+                    <ul class="trigger-list">
+                        <li>I'm <span class="trigger-keyword">done</span>, ready to ship</li>
+                        <li>feature is <span class="trigger-keyword">complete</span></li>
+                        <li><span class="trigger-keyword">ready to deploy</span></li>
+                        <li><span class="trigger-keyword">finished</span> implementing</li>
+                        <li>tests are <span class="trigger-keyword">passing</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 8: Rapid Prototyping -->
+            <div class="card priority-medium">
+                <span class="priority-badge badge-medium">Medium</span>
+                <div class="card-header">
+                    <span class="emoji">🚀</span>
+                    <div class="card-title">
+                        <h3>Rapid Prototyping</h3>
+                        <div class="type">Enforced • Build vs Buy</div>
+                    </div>
+                </div>
+                <div class="triggers">
+                    <h4>Trigger Keywords:</h4>
+                    <ul class="trigger-list">
+                        <li><span class="trigger-keyword">quick MVP</span> for tracking</li>
+                        <li><span class="trigger-keyword">prototype</span> for feedback</li>
+                        <li><span class="trigger-keyword">fast</span> implementation</li>
+                        <li><span class="trigger-keyword">proof of concept</span></li>
+                        <li><span class="trigger-keyword">basic version</span> quickly</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 9: Security -->
+            <div class="card priority-medium">
+                <span class="priority-badge badge-medium">Medium</span>
+                <div class="card-header">
+                    <span class="emoji">🔐</span>
+                    <div class="card-title">
+                        <h3>Security Patterns</h3>
+                        <div class="type">Enforced • Never Trust Client</div>
+                    </div>
+                </div>
+                <div class="triggers">
+                    <h4>Trigger Keywords:</h4>
+                    <ul class="trigger-list">
+                        <li><span class="trigger-keyword">add authentication</span> to API</li>
+                        <li><span class="trigger-keyword">implement authorization</span></li>
+                        <li><span class="trigger-keyword">secure</span> the endpoint</li>
+                        <li><span class="trigger-keyword">validate</span> user input</li>
+                        <li><span class="trigger-keyword">security headers</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 10: Performance -->
+            <div class="card priority-medium">
+                <span class="priority-badge badge-medium">Medium</span>
+                <div class="card-header">
+                    <span class="emoji">⚡</span>
+                    <div class="card-title">
+                        <h3>Performance</h3>
+                        <div class="type">Enforced • Profile First</div>
+                    </div>
+                </div>
+                <div class="triggers">
+                    <h4>Trigger Keywords:</h4>
+                    <ul class="trigger-list">
+                        <li>dashboard <span class="trigger-keyword">loading slowly</span></li>
+                        <li><span class="trigger-keyword">optimize</span> queries</li>
+                        <li><span class="trigger-keyword">improve</span> response time</li>
+                        <li><span class="trigger-keyword">reduce</span> page load</li>
+                        <li><span class="trigger-keyword">speed up</span> application</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 11: Dependencies -->
+            <div class="card priority-medium">
+                <span class="priority-badge badge-medium">Medium</span>
+                <div class="card-header">
+                    <span class="emoji">📦</span>
+                    <div class="card-title">
+                        <h3>Dependencies</h3>
+                        <div class="type">Enforced • One At A Time</div>
+                    </div>
+                </div>
+                <div class="triggers">
+                    <h4>Trigger Keywords:</h4>
+                    <ul class="trigger-list">
+                        <li><span class="trigger-keyword">update</span> npm dependencies</li>
+                        <li><span class="trigger-keyword">upgrade</span> React version</li>
+                        <li><span class="trigger-keyword">fix</span> vulnerabilities</li>
+                        <li><span class="trigger-keyword">add</span> package dependency</li>
+                        <li><span class="trigger-keyword">outdated</span> packages</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 12: Learning -->
+            <div class="card priority-low">
+                <span class="priority-badge badge-low">Lower</span>
+                <div class="card-header">
+                    <span class="emoji">🎓</span>
+                    <div class="card-title">
+                        <h3>Learning/Onboarding</h3>
+                        <div class="type">Suggestion • Comprehensive</div>
+                    </div>
+                </div>
+                <div class="triggers">
+                    <h4>Trigger Keywords:</h4>
+                    <ul class="trigger-list">
+                        <li><span class="trigger-keyword">learn</span> how project works</li>
+                        <li><span class="trigger-keyword">teach me</span> architecture</li>
+                        <li><span class="trigger-keyword">show me</span> how auth works</li>
+                        <li><span class="trigger-keyword">explain</span> project structure</li>
+                        <li><span class="trigger-keyword">guide</span> through codebase</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 13: Code Explanation -->
+            <div class="card priority-low">
+                <span class="priority-badge badge-low">Specific</span>
+                <div class="card-header">
+                    <span class="emoji">📖</span>
+                    <div class="card-title">
+                        <h3>Code Explanation</h3>
+                        <div class="type">Enforced • Code-Specific</div>
+                    </div>
+                </div>
+                <div class="triggers">
+                    <h4>Trigger Keywords:</h4>
+                    <ul class="trigger-list">
+                        <li><span class="trigger-keyword">explain</span> middleware <span class="trigger-keyword">function</span></li>
+                        <li>what does this <span class="trigger-keyword">class</span> do?</li>
+                        <li>how does <span class="trigger-keyword">module</span> work?</li>
+                        <li><span class="trigger-keyword">explain</span> this <span class="trigger-keyword">code</span></li>
+                        <li>what does <span class="trigger-keyword">handler</span> do?</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 14: Pattern Recall -->
+            <div class="card priority-low">
+                <span class="priority-badge badge-low">Specific</span>
+                <div class="card-header">
+                    <span class="emoji">🔍</span>
+                    <div class="card-title">
+                        <h3>Pattern Recall</h3>
+                        <div class="type">Enforced • Memory Search</div>
+                    </div>
+                </div>
+                <div class="triggers">
+                    <h4>Trigger Keywords:</h4>
+                    <ul class="trigger-list">
+                        <li><span class="trigger-keyword">how did we</span> handle uploads?</li>
+                        <li><span class="trigger-keyword">what's the pattern</span> for errors?</li>
+                        <li><span class="trigger-keyword">recall pattern</span> for caching</li>
+                        <li><span class="trigger-keyword">how do we usually</span> implement?</li>
+                        <li><span class="trigger-keyword">did we</span> solve this before?</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="footer-title">Priority Legend</div>
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color color-high"></div>
+                    <span>Highest Priority - Most Specific Patterns</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color color-medium"></div>
+                    <span>Medium Priority - Task-Specific Workflows</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color color-low"></div>
+                    <span>Lower Priority - General/Specific Queries</span>
+                </div>
+            </div>
+            <div class="footer-content" style="margin-top: 30px;">
+                <strong>Developer Skills Plugin</strong> | 14 Active Superflows | 100% Test Pass Rate<br>
+                Generated: 2025-10-31 | <a href="superflows-complete-guide.html" style="color: #667eea;">Complete Guide</a> | <a href="superflows-cookbook.html" style="color: #667eea;">Cookbook</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

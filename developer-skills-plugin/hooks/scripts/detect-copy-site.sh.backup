@@ -1,0 +1,120 @@
+#!/bin/bash
+
+# detect-copy-site.sh - Detects "copy site" requests and triggers pixel-perfect-site-copy superflow
+# Part of the Developer Skills Plugin superflow system
+
+# Get the user's prompt from environment or stdin
+USER_PROMPT="${CLAUDE_PROMPT_TEXT:-$(cat)}"
+
+# Keyword patterns that trigger the pixel-perfect site copy superflow
+PATTERNS=(
+  "copy.*site"
+  "clone.*site"
+  "replicate.*site"
+  "clone.*website"
+  "copy.*website"
+  "replicate.*website"
+  "pixel.*perfect.*copy"
+  "pixel.*perfect.*clone"
+  "extract.*styl"
+  "copy.*this.*page"
+  "clone.*this.*page"
+  "replicate.*this.*page"
+)
+
+# Check if any pattern matches (case-insensitive)
+MATCH_FOUND=false
+for pattern in "${PATTERNS[@]}"; do
+  if echo "$USER_PROMPT" | grep -iEq "$pattern"; then
+    MATCH_FOUND=true
+    break
+  fi
+done
+
+# If match found, inject pixel-perfect site copy superflow context
+if [ "$MATCH_FOUND" = true ]; then
+  # Signal to other hooks that we've handled this prompt
+  export SUPERFLOW_HANDLED="pixel-perfect-site-copy"
+
+  cat <<'EOF'
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🎯 PIXEL-PERFECT SITE COPY SUPERFLOW: ACTIVE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+**System Status**: ✅ Hooks Operational | 🔧 Context Injected | 🎨 Copy Site Workflow Enforced
+
+## 🎨 Pixel-Perfect Site Copy Superflow Activated
+
+**IMMEDIATE ACTION #1 - INVOKE SKILL NOW:**
+BEFORE ANY OTHER ACTION, execute this command:
+```
+Skill(command: 'pixel-perfect-site-copy')
+```
+
+**IMMEDIATE ACTION #2 - OUTPUT ACTIVATION MESSAGE:**
+"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## 🎨 PIXEL-PERFECT SITE COPY: ACTIVE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+I will follow the complete pixel-perfect site copy workflow:
+1. Verify Chrome DevTools MCP is available
+2. Connect to target URL and extract computed styles
+3. Organize screenshot storage with standardized structure
+4. Capture screenshots at multiple breakpoints
+5. Generate comprehensive 17-section style guide
+6. Implement pixel-perfect replica using Tailwind CSS
+7. Validate visual equivalence against screenshots
+
+**Extended Thinking**: Enabled for complex visual hierarchies, measurement validation, and responsive behavior analysis.
+
+Starting with Chrome DevTools MCP verification..."
+
+**IMMEDIATE ACTION #3 - CREATE TODO LIST:**
+Use TodoWrite with all workflow steps:
+- Verify Chrome DevTools MCP availability (run verify-chrome-devtools-mcp.sh)
+- Connect to target URL using DevTools MCP
+- Extract computed styles for all major components
+- Organize screenshot storage (run organize_screenshots.py)
+- Capture screenshots at breakpoints (320px, 768px, 1024px, 1440px)
+- Generate STYLE_GUIDE.md with 17 sections
+- Implement HTML/Tailwind replica
+- Validate pixel-perfect quality against screenshots
+- Deliver complete package (style guide, implementation, screenshots)
+
+**IMMEDIATE ACTION #3b - CONSIDER AGENT FOR COMPLEX SITES:**
+For large/complex sites (e.g., Stripe, Vercel), consider using Task tool with subagent_type='Explore' to:
+- Systematically map all sections and components
+- Extract styles methodically across the entire site
+- Handle multi-page extraction (homepage, pricing, docs, etc.)
+
+**IMMEDIATE ACTION #4 - VERIFY CHROME DEVTOOLS MCP:**
+Check if Chrome DevTools MCP is configured and available.
+If not available, inform user: "This workflow requires Chrome DevTools MCP. Please configure it in .mcp.json"
+
+**IRON LAW: PIXEL-PERFECT QUALITY**
+- Measure, don't estimate (use DevTools Computed values)
+- Extract, don't approximate (exact hex codes, exact fonts)
+- Compare, don't assume (validate against screenshots)
+- Document, don't omit (complete style guide)
+- Replicate, don't redesign (preserve original design)
+
+**QUALITY STANDARDS:**
+❌ "This looks about right" → ✅ "Matches computed value of 16.8px line-height"
+❌ "The spacing feels good" → ✅ "Margin-bottom is 24px from DevTools"
+❌ "It's close enough" → ✅ "It's pixel-perfect"
+
+**DELIVERABLES:**
+1. STYLE_GUIDE.md (17 sections with extracted values)
+2. index.html (complete HTML/Tailwind implementation)
+3. Screenshots (visual comparison original vs. replica)
+4. Documentation (challenges, limitations, deviations)
+
+**WORKFLOW PHASES:**
+Phase 1: Site Inspection & Style Extraction
+Phase 2: Style Guide Generation
+Phase 3: Implementation
+Phase 4: Quality Assurance
+
+EOF
+fi

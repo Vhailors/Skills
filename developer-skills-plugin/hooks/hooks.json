@@ -80,11 +80,29 @@
     ]
   },
   "metadata": {
-    "superflows": 8,
+    "superflows": 14,
     "active_hooks": 7,
     "enforcement_hooks": ["logging-schema", "refactoring-safety", "pre-commit-validation", "test-verification"],
-    "suggestion_hooks": ["quick-fix", "ui-library", "integration-check", "code-explanation", "spotlight-error-check", "skill-gap-detection"],
+    "suggestion_hooks": ["quick-fix", "ui-library", "integration-check", "code-explanation", "spotlight-error-check", "skill-gap-detection", "pixel-perfect-site-copy", "security-scan", "perf-check", "dependency-check", "pattern-recall"],
+    "supporting_skills": ["mock-data-removal", "full-stack-integration-checker", "error-handling-patterns"],
+    "superflow_list": [
+      "pixel-perfect-site-copy",
+      "refactoring-safety-protocol",
+      "debugging-memory-assisted",
+      "feature-development-speckit",
+      "ui-development-shadcn",
+      "api-contract-design",
+      "verification-before-completion",
+      "rapid-prototyping-mvp",
+      "security-patterns",
+      "performance-optimization",
+      "dependency-management",
+      "learning-onboarding",
+      "code-explanation",
+      "pattern-recall"
+    ],
     "documentation": "../SUPERFLOWS.md",
-    "integrations": ["spotlight-mcp", "skill-seekers"]
+    "integrations": ["spotlight-mcp", "skill-seekers", "chrome-devtools-mcp"],
+    "note": "All 14 superflows integrated into analyze-prompt.sh for centralized pattern detection. Supporting skills called by other workflows."
   }
 }

@@ -48,6 +48,8 @@ Skip any step = lying, not verifying
 | Regression test works | Red-green cycle verified | Test passes once |
 | Agent completed | VCS diff shows changes | Agent reports "success" |
 | Requirements met | Line-by-line checklist | Tests passing |
+| Ready to ship | Mock data scan: 0 findings | Manual review, "looks clean" |
+| Production-ready | No test artifacts present | Tests passing, code works |
 
 ## Red Flags - STOP
 
@@ -104,6 +106,14 @@ Skip any step = lying, not verifying
 ✅ Agent reports success → Check VCS diff → Verify changes → Report actual state
 ❌ Trust agent report
 ```
+
+**Mock data scan (before ship/PR):**
+```
+✅ [Run mock scan] [See: 0 findings] "No test artifacts found"
+❌ "I reviewed the code, looks clean"
+```
+
+**REQUIRED SUB-SKILL:** Use mock-data-removal for systematic scanning before any ship/deploy/PR claims.
 
 ## Why This Matters
 

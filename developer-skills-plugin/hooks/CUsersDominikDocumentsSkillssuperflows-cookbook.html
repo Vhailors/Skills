@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Superflow Quick Reference Cookbook</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #2d3748;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            padding: 40px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 3px solid #4299e1;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #4299e1;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            color: #a0aec0;
+            font-size: 1.1em;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            padding: 20px;
+            background: #1a202c;
+            border-radius: 8px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            color: #48bb78;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            color: #a0aec0;
+            font-size: 0.9em;
+        }
+
+        .superflow-item {
+            background: #1a202c;
+            margin: 15px 0;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #4299e1;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .superflow-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(66, 153, 225, 0.3);
+        }
+
+        .superflow-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .emoji {
+            font-size: 1.5em;
+        }
+
+        .superflow-name {
+            font-size: 1.2em;
+            color: #4299e1;
+            font-weight: bold;
+        }
+
+        .badge {
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.7em;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .badge-enforced {
+            background: #fc8181;
+            color: #742a2a;
+        }
+
+        .badge-suggestion {
+            background: #68d391;
+            color: #22543d;
+        }
+
+        .trigger {
+            color: #f6ad55;
+            margin: 8px 0;
+            padding-left: 20px;
+        }
+
+        .trigger:before {
+            content: "▸ ";
+            color: #4299e1;
+        }
+
+        .principle {
+            color: #a0aec0;
+            font-style: italic;
+            font-size: 0.9em;
+            margin-top: 8px;
+            padding-left: 20px;
+        }
+
+        .section-title {
+            color: #4299e1;
+            font-size: 1.5em;
+            margin: 40px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4299e1;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .priority-section {
+            margin-bottom: 30px;
+        }
+
+        .priority-label {
+            color: #f6ad55;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        footer {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #4a5568;
+            text-align: center;
+            color: #a0aec0;
+        }
+
+        footer a {
+            color: #4299e1;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        .quick-tips {
+            background: #2c5282;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 30px 0;
+        }
+
+        .quick-tips h3 {
+            color: #90cdf4;
+            margin-bottom: 15px;
+        }
+
+        .quick-tips ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .quick-tips li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .quick-tips li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #48bb78;
+            font-weight: bold;
+        }
+
+        @media print {
+            body {
+                background: white;
+                color: black;
+            }
+
+            .container {
+                box-shadow: none;
+            }
+
+            .superflow-item {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 Superflow Cookbook</h1>
+            <p class="subtitle">Quick Reference Guide for Memorization</p>
+        </header>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-number">14</div>
+                <div class="stat-label">Superflows</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">4</div>
+                <div class="stat-label">Enforced</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">10</div>
+                <div class="stat-label">Suggested</div>
+            </div>
+        </div>
+
+        <div class="quick-tips">
+            <h3>💡 Quick Tips</h3>
+            <ul>
+                <li>Enforced superflows block until requirements are met</li>
+                <li>Higher priority patterns are checked first</li>
+                <li>All superflows show "SUPERFLOW: ACTIVE" banner</li>
+                <li>Use specific keywords from trigger examples</li>
+                <li>Memorize the emoji + name combinations</li>
+            </ul>
+        </div>
+
+        <!-- HIGH PRIORITY -->
+        <h2 class="section-title">⚡ Highest Priority Superflows</h2>
+        <div class="priority-section">
+            <p class="priority-label">→ These check FIRST (most specific patterns)</p>
+
+            <div class="superflow-item">
+                <div class="superflow-header">
+                    <span class="emoji">🎨</span>
+                    <span class="superflow-name">Pixel-Perfect Site Copy</span>
+                    <span class="badge badge-enforced">Enforced</span>
+                </div>
+                <div class="trigger">"copy site https://example.com"</div>
+                <div class="trigger">"clone website https://stripe.com"</div>
+                <div class="trigger">"pixel-perfect copy of https://vercel.com"</div>
+                <div class="principle">→ Chrome DevTools MCP + 17-section style guide + Tailwind only</div>
+            </div>
+
+            <div class="superflow-item">
+                <div class="superflow-header">
+                    <span class="emoji">🛡️</span>
+                    <span class="superflow-name">Refactoring Safety</span>
+                    <span class="badge badge-enforced">Enforced</span>
+                </div>
+                <div class="trigger">"refactor the authentication module"</div>
+                <div class="trigger">"clean up the payment code"</div>
+                <div class="trigger">"restructure the API handlers"</div>
+                <div class="principle">→ NO REFACTORING WITHOUT TESTS (blocks until tests exist)</div>
+            </div>
+
+            <div class="superflow-item">
+                <div class="superflow-header">
+                    <span class="emoji">🐛</span>
+                    <span class="superflow-name">Debugging</span>
+                    <span class="badge badge-enforced">Enforced</span>
+                </div>
+                <div class="trigger">"there's a bug in the login function"</div>
+                <div class="trigger">"error when submitting the form"</div>
+                <div class="trigger">"TypeError in payment processing"</div>
+                <div class="principle">→ Check Spotlight MCP + search memory FIRST before fixing</div>
+            </div>
+        </div>
+
+        <!-- MEDIUM PRIORITY -->
+        <h2 class="section-title">📊 Medium Priority Superflows</h2>
+        <div class="priority-section">
+            <p class="priority-label">→ Task-specific workflows (check after high priority)</p>
+
+            <div class="superflow-item">
+                <div class="superflow-header">
+                    <span class="emoji">🏗️</span>
+                    <span class="superflow-name">Feature Development</span>
+                    <span class="badge badge-enforced">Enforced</span>
+                </div>
+                <div class="trigger">"implement user profile management"</div>
+                <div class="trigger">"build a notification system"</div>
+                <div class="trigger">"create real-time chat"</div>
+                <div class="principle">→ Spec-kit workflow: Constitution → Specify → Clarify → Plan</div>
+            </div>
+
+            <div class="superflow-item">
+                <div class="superflow-header">
+                    <span class="emoji">🎨</span>
+                    <span class="superflow-name">UI Development</span>
+                    <span class="badge badge-enforced">Enforced</span>
+                </div>
+                <div class="trigger">"create a pricing table"</div>
+                <div class="trigger">"build a testimonial section"</div>
+                <div class="trigger">"design a hero section"</div>
+                <div class="principle">→ /find-ui FIRST, shadcn/ui SECOND, build from scratch LAST</div>
+            </div>
+
+            <div class="superflow-item">
+                <div class="superflow-header">
+                    <span class="emoji">🔌</span>
+                    <span class="superflow-name">API Contract Design</span>
+                    <span class="badge badge-enforced">Enforced</span>
+                </div>
+                <div class="trigger">"design the user registration endpoint"</div>
+                <div class="trigger">"create payment processing API"</div>
+                <div class="trigger">"modify the authentication endpoint"</div>
+                <div class="principle">→ CONTRACTS ARE SACRED (never break without versioning)</div>
+            </div>
+
+            <div class="superflow-item">
+                <div class="superflow-header">
+                    <span class="emoji">✅</span>
+                    <span class="superflow-name">Verification</span>
+                    <span class="badge badge-enforced">Enforced</span>
+                </div>
+                <div class="trigger">"I'm done, ready to ship"</div>
+                <div class="trigger">"feature is complete"</div>
+                <div class="trigger">"ready to deploy"</div>
+                <div class="principle">→ NO COMPLETION WITHOUT EVIDENCE (/check-integration required)</div>
+            </div>
+
+            <div class="superflow-item">
+                <div class="superflow-header">
+                    <span class="emoji">🚀</span>
+                    <span class="superflow-name">Rapid Prototyping</span>
+                    <span class="badge badge-enforced">Enforced</span>
+                </div>
+                <div class="trigger">"build a quick MVP"</div>
+                <div class="trigger">"create a prototype"</div>
+                <div class="trigger">"proof of concept"</div>
+                <div class="principle">→ Build vs Buy vs Integrate decision matrix (fast ≠ broken)</div>
+            </div>
+
+            <div class="superflow-item">
+                <div class="superflow-header">
+                    <span class="emoji">🔐</span>
+                    <span class="superflow-name">Security Patterns</span>
+                    <span class="badge badge-enforced">Enforced</span>
+                </div>
+                <div class="trigger">"add authentication to the API"</div>
+                <div class="trigger">"implement authorization checks"</div>
+                <div class="trigger">"secure the payment endpoint"</div>
+                <div class="principle">→ /security-scan FIRST, then fix (NEVER trust client data)</div>
+            </div>
+
+            <div class="superflow-item">
+                <div class="superflow-header">
+                    <span class="emoji">⚡</span>
+                    <span class="superflow-name">Performance</span>
+                    <span class="badge badge-enforced">Enforced</span>
+                </div>
+                <div class="trigger">"the dashboard is loading slowly"</div>
+                <div class="trigger">"optimize database queries"</div>
+                <div class="trigger">"reduce page load time"</div>
+                <div class="principle">→ PROFILE FIRST, OPTIMIZE SECOND (measure always)</div>
+            </div>
+
+            <div class="superflow-item">
+                <div class="superflow-header">
+                    <span class="emoji">📦</span>
+                    <span class="superflow-name">Dependency Management</span>
+                    <span class="badge badge-enforced">Enforced</span>
+                </div>
+                <div class="trigger">"update all npm dependencies"</div>
+                <div class="trigger">"upgrade React to latest"</div>
+                <div class="trigger">"fix security vulnerabilities"</div>
+                <div class="principle">→ ONE package at a time, TEST after each update</div>
+            </div>
+        </div>
+
+        <!-- LOWER PRIORITY (More Specific) -->
+        <h2 class="section-title">🔍 Specific Query Superflows</h2>
+        <div class="priority-section">
+            <p class="priority-label">→ Code-specific and memory-specific (check before Learning)</p>
+
+            <div class="superflow-item">
+                <div class="superflow-header">
+                    <span class="emoji">📖</span>
+                    <span class="superflow-name">Code Explanation</span>
+                    <span class="badge badge-enforced">Enforced</span>
+                </div>
+                <div class="trigger">"explain what the middleware function does"</div>
+                <div class="trigger">"what does this class do?"</div>
+                <div class="trigger">"how does the auth module work?"</div>
+                <div class="principle">→ /explain-code with historical context + design rationale</div>
+            </div>
+
+            <div class="superflow-item">
+                <div class="superflow-header">
+                    <span class="emoji">🔍</span>
+                    <span class="superflow-name">Pattern Recall</span>
+                    <span class="badge badge-enforced">Enforced</span>
+                </div>
+                <div class="trigger">"how did we handle file uploads before?"</div>
+                <div class="trigger">"what's the pattern for API errors?"</div>
+                <div class="trigger">"recall pattern for authentication"</div>
+                <div class="principle">→ /recall-pattern to search memory (learn from past)</div>
+            </div>
+        </div>
+
+        <!-- LOWEST PRIORITY (General) -->
+        <h2 class="section-title">📚 General Learning Superflow</h2>
+        <div class="priority-section">
+            <p class="priority-label">→ Catch-all for broad learning requests (checks LAST)</p>
+
+            <div class="superflow-item">
+                <div class="superflow-header">
+                    <span class="emoji">🎓</span>
+                    <span class="superflow-name">Learning/Onboarding</span>
+                    <span class="badge badge-suggestion">Suggestion</span>
+                </div>
+                <div class="trigger">"help me learn how this project works"</div>
+                <div class="trigger">"teach me the architecture"</div>
+                <div class="trigger">"show me how authentication works"</div>
+                <div class="principle">→ Comprehensive explanation with concrete examples from codebase</div>
+            </div>
+        </div>
+
+        <div class="quick-tips" style="margin-top: 50px;">
+            <h3>🎯 Memorization Strategy</h3>
+            <ul>
+                <li><strong>Emoji First:</strong> Associate each emoji with its workflow (🛡️ = safety/tests)</li>
+                <li><strong>Enforced = Blocking:</strong> Red badges mean workflow stops until requirements met</li>
+                <li><strong>Priority Matters:</strong> Specific patterns (pixel-perfect) beat general ones (learning)</li>
+                <li><strong>Key Phrases:</strong> "copy site", "refactor", "bug", "implement", "create component"</li>
+                <li><strong>Iron Laws:</strong> Each enforced superflow has 1-2 iron laws to remember</li>
+            </ul>
+        </div>
+
+        <div class="quick-tips">
+            <h3>⚡ Essential Iron Laws (Must Know)</h3>
+            <ul>
+                <li><strong>Refactoring:</strong> NO REFACTORING WITHOUT TESTS (blocks)</li>
+                <li><strong>Verification:</strong> NO COMPLETION WITHOUT EVIDENCE (blocks)</li>
+                <li><strong>UI Dev:</strong> /find-ui FIRST, shadcn SECOND, build LAST</li>
+                <li><strong>Performance:</strong> PROFILE FIRST, OPTIMIZE SECOND</li>
+                <li><strong>Dependencies:</strong> ONE at a time, TEST after each</li>
+                <li><strong>API Design:</strong> CONTRACTS ARE SACRED (never break)</li>
+                <li><strong>Security:</strong> NEVER trust client-side data</li>
+            </ul>
+        </div>
+
+        <footer>
+            <p><strong>Developer Skills Plugin</strong></p>
+            <p>14 Active Superflows | 100% Test Pass Rate</p>
+            <p style="margin-top: 15px;">
+                <a href="file:///C:/Users/Dominik/Documents/Skills/superflows-complete-guide.html">View Complete Guide</a>
+            </p>
+            <p style="margin-top: 10px; opacity: 0.7;">
+                Print this page or keep it open for quick reference during development
+            </p>
+        </footer>
+    </div>
+</body>
+</html>
