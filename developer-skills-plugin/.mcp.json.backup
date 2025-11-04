@@ -1,0 +1,23 @@
+{
+  "mcpServers": {
+    "sentry-spotlight": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@spotlightjs/spotlight@latest",
+        "mcp"
+      ],
+      "env": {
+        "SPOTLIGHT_PORT": "8969",
+        "NODE_ENV": "development"
+      }
+    },
+    "chrome-devtools": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "chrome-devtools-mcp@latest"
+      ]
+    }
+  }
+}

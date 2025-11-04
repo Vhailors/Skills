@@ -27,7 +27,7 @@ If no pattern provided, ask the user: "What UI pattern are you looking for? (e.g
 Read the UI inspiration index:
 
 ```
-C:\Users\Dominik\Documents\UI\ui-inspiration-index.json
+/mnt/c/Users/Dominik/Documents/UI/ui-inspiration-index.json
 ```
 
 ### Step 2: Multi-Strategy Search
@@ -74,7 +74,7 @@ For each match found, display:
 
 **Related Components:**
 - [list component names from related_components]
-  - Location: C:\Users\Dominik\Documents\UI\components\[component-name]\
+  - Location: /mnt/c/Users/Dominik/Documents/UI/components/[component-name]/
 
 **Quality Indicators:**
 - [list quality_indicators]
@@ -92,7 +92,7 @@ If related components exist, offer to show their implementation:
 I found [N] components that implement this pattern:
 
 1. **[component-name]** - [brief description from index or file]
-   - Location: `C:\Users\Dominik\Documents\UI\components\[component-name]\`
+   - Location: `/mnt/c/Users/Dominik/Documents/UI/components/[component-name]/`
    - Files: [list files in directory]
 
 Would you like me to:
@@ -155,9 +155,9 @@ A masonry-style testimonial grid featuring user reviews with profile pictures, n
 
 **Related Components:**
 - animated_testimonials
-  - Location: C:\Users\Dominik\Documents\UI\components\animated_testimonials\
+  - Location: /mnt/c/Users/Dominik/Documents/UI/components/animated_testimonials/
 - social_card
-  - Location: C:\Users\Dominik\Documents\UI\components\social_card\
+  - Location: /mnt/c/Users/Dominik/Documents/UI/components/social_card/
 
 **Quality Indicators:**
 - authentic user content
@@ -171,7 +171,7 @@ A masonry-style testimonial grid featuring user reviews with profile pictures, n
 ## 2. Animated Testimonials Carousel
 
 **Component:** animated_testimonials
-**Location:** C:\Users\Dominik\Documents\UI\components\animated_testimonials\
+**Location:** /mnt/c/Users/Dominik/Documents/UI/components/animated_testimonials/
 
 **Features:**
 - Framer Motion animations with stacked card effect

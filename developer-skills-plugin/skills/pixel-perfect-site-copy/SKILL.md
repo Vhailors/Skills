@@ -1,13 +1,13 @@
 ---
 name: pixel-perfect-site-copy
-description: This skill should be used when the user requests to copy, clone, or replicate a website with pixel-perfect accuracy. Triggered by phrases like "copy site", "clone website", "replicate this page", or "pixel-perfect copy". Uses Chrome DevTools MCP to extract styling and creates comprehensive style guides for exact visual reproduction.
+description: This skill should be used when the user requests to copy, clone, or replicate a website with pixel-perfect accuracy. Triggered by phrases like "copy site", "clone website", "replicate this page", or "pixel-perfect copy". Uses automated Puppeteer-based extraction to capture computed styles, screenshots, and generates comprehensive style guides for exact visual reproduction.
 ---
 
 # Pixel-Perfect Site Copy
 
 ## Overview
 
-This skill enables exact replication of websites by extracting complete styling information using Chrome DevTools MCP and generating comprehensive style guides that ensure pixel-perfect, preset-perfect quality.
+This skill enables exact replication of websites by automatically extracting complete styling information using a custom Puppeteer script. It captures computed styles at multiple breakpoints, takes full-page screenshots, and generates comprehensive style guides that ensure pixel-perfect, preset-perfect quality.
 
 ## When to Use This Skill
 
@@ -28,52 +28,106 @@ This skill is specifically designed for visual replication tasks that require ex
 
 ## Prerequisites
 
-Before starting, verify that Chrome DevTools MCP is available:
-- The `chrome-devtools` MCP server must be configured in the plugin's `.mcp.json`
-- MCP tools for inspecting elements, extracting styles, and capturing screenshots should be accessible
-- Run verification script: `bash hooks/scripts/verify-chrome-devtools-mcp.sh` to check configuration
-- If MCP is not available, inform the user that this skill requires Chrome DevTools MCP integration
+### Automated Style Extraction (Puppeteer) ✅ RECOMMENDED
 
-**Verification Step**: Always run the MCP verification before proceeding with the workflow to avoid runtime failures.
+**PRIMARY METHOD**: This skill uses a custom Puppeteer-based style extractor that automatically:
+- Launches headless Chrome
+- Navigates to target URLs
+- Extracts computed styles from all significant elements
+- Captures full-page screenshots at 6 responsive breakpoints (320px, 375px, 768px, 1024px, 1440px, 1920px)
+- Generates comprehensive style guides and JSON data files
+- Creates organized directory structure for original/replica/comparison
+
+**Requirements**:
+- Node.js v22+ ✅
+- Puppeteer (installed via `npm install` in plugin directory)
+
+**Installation**:
+```bash
+cd /path/to/developer-skills-plugin
+npm install
+```
+
+This installs Puppeteer and all dependencies automatically.
+
+### Alternative: Chrome DevTools MCP (Currently Broken)
+
+**Note**: The Chrome DevTools MCP integration is currently **not functional** due to a bug in the `chrome-devtools-mcp` package (versions 0.8.0-0.9.0). The Puppeteer approach above is the recommended and supported method.
+
+See `MCP-STATUS.md` in the plugin root for technical details on the MCP issues.
 
 ## Workflow
 
 Follow this complete workflow for pixel-perfect site replication:
 
-### Phase 1: Site Inspection and Style Extraction
+### Phase 1: Automated Style Extraction (Using Puppeteer Script)
 
-1. **Open target site in Chrome DevTools MCP**
-   - Use Chrome DevTools MCP to connect to the target URL
-   - Verify page loads completely before inspection
+**Run the automated style extraction script:**
 
-2. **Extract computed styles systematically**
-   - Use DevTools MCP to inspect each major component (header, navigation, hero, content sections, footer)
-   - For each component, extract:
-     - Typography: font-family, font-weight, font-size, line-height, letter-spacing
-     - Colors: background-color, color, border-color (including hover/active states)
-     - Spacing: margin, padding, gap (for flexbox/grid)
-     - Layout: display, flex properties, grid properties, position values
-     - Visual effects: box-shadow, border-radius, opacity, filters
-     - Animations: transition properties, animation keyframes, transform values
-   - Use the "Computed" tab in DevTools to get final rendered values, not authored CSS
-   - Document responsive behavior by checking styles at breakpoints: 320px, 768px, 1024px, 1440px
+```bash
+cd /path/to/developer-skills-plugin/skills/pixel-perfect-site-copy
+node scripts/extract-styles.js <target-url> [optional-output-dir]
+```
 
-3. **Organize screenshot storage**
-   - Run: `python scripts/organize_screenshots.py <domain>` to create standardized directory structure
-   - This creates: `site-copy-<domain>/original/`, `replica/`, `comparison/` directories
-   - Standardized naming: `desktop-1440px.png`, `tablet-768px.png`, `mobile-320px.png`
+**Example:**
+```bash
+node scripts/extract-styles.js https://google.com
+# Creates: ./site-copy-google.com/ with all extracted data
+```
 
-4. **Capture visual screenshots**
-   - Use Chrome DevTools Device Toolbar to capture screenshots at common breakpoints
-   - Take full-page screenshots for complete visual reference
-   - Save to `site-copy-<domain>/original/` directory with standardized names
-   - Capture at breakpoints: 320px, 768px, 1024px, 1440px minimum
-   - **Critical**: These screenshots are the source of truth for pixel-perfect comparison
+**What the script does automatically:**
 
-5. **Document layout structure**
-   - Map the DOM hierarchy and semantic HTML structure
-   - Identify layout systems used (flexbox, grid, etc.)
-   - Note container relationships and nesting depth
+1. **Launches headless Chrome and navigates to target URL**
+   - Waits for page to fully load (networkidle2)
+   - Handles dynamic content and JavaScript-rendered elements
+
+2. **Extracts computed styles systematically at 6 breakpoints**
+   - **Mobile**: 320x568px, 375x667px
+   - **Tablet**: 768x1024px
+   - **Desktop**: 1024x768px, 1440x900px, 1920x1080px
+
+   For each breakpoint, extracts:
+   - Typography: font-family, font-weight, font-size, line-height, letter-spacing
+   - Colors: background-color, color, border-color, opacity
+   - Spacing: margin, padding, gap (for flexbox/grid)
+   - Layout: display, flex/grid properties, position values
+   - Visual effects: box-shadow, border-radius, filters, transforms
+   - Animations: transition properties, animation definitions
+
+3. **Captures full-page screenshots**
+   - Automatically saves screenshots at all 6 breakpoints
+   - Stored in `site-copy-<domain>/original/` directory
+   - Named systematically: `mobile-320px.png`, `desktop-large-1440px.png`, etc.
+   - These screenshots are the source of truth for pixel-perfect comparison
+
+4. **Generates comprehensive data files**
+   - **STYLE_GUIDE.md**: Human-readable style guide with extracted design system
+   - **data/complete-extraction.json**: Full JSON data with all component styles
+   - **data/<breakpoint>-styles.json**: Breakpoint-specific extracted data
+   - **README.md**: Workflow instructions and next steps
+
+5. **Creates organized directory structure**
+   - `original/` - Screenshots of original site
+   - `replica/` - Screenshots of your implementation (you populate this)
+   - `comparison/` - Side-by-side comparisons and notes
+   - `data/` - JSON files with extracted style data
+
+**Output Example:**
+```
+site-copy-google.com/
+├── STYLE_GUIDE.md          # Generated style guide
+├── README.md               # Workflow instructions
+├── original/               # Original screenshots
+│   ├── mobile-320px.png
+│   ├── tablet-768px.png
+│   └── desktop-large-1440px.png
+├── data/                   # Extracted data
+│   ├── complete-extraction.json
+│   ├── mobile-styles.json
+│   └── desktop-large-styles.json
+├── replica/                # Your implementation screenshots
+└── comparison/             # Comparison notes
+```
 
 ### Phase 2: Style Guide Generation
 
@@ -226,15 +280,15 @@ Extended thinking is **automatically enabled** for this superflow to ensure pixe
 - **Quality Standards**: `references/design-quality-standards.md` - Detailed quality requirements and workflows
 
 ### Utility Scripts
-- **Screenshot Organization**: `scripts/organize_screenshots.py` - Creates standardized directory structure for screenshot storage
+- **Automated Style Extraction**: `scripts/extract-styles.js` - **PRIMARY TOOL** for pixel-perfect site copying
+  - Usage: `node scripts/extract-styles.js <url> [output-dir]`
+  - Automatically extracts styles, captures screenshots, generates style guides
+  - Outputs organized directory structure with all data needed for replication
+  - Example: `node scripts/extract-styles.js https://stripe.com`
+
+- **Screenshot Organization**: `scripts/organize_screenshots.py` - Creates standardized directory structure (legacy, now automated by extract-styles.js)
   - Usage: `python scripts/organize_screenshots.py <domain> [output-dir]`
   - Creates: `site-copy-<domain>/original/`, `replica/`, `comparison/` directories
-  - Includes README with workflow instructions
-
-### Verification Scripts
-- **MCP Verification**: `hooks/scripts/verify-chrome-devtools-mcp.sh` - Verifies Chrome DevTools MCP is configured
-  - Run this first to avoid workflow failures
-  - Checks `.mcp.json` for chrome-devtools configuration
 
 ## Output Deliverables
 
@@ -250,12 +304,30 @@ When completing a pixel-perfect site copy task, deliver:
 **User**: "Copy this site: https://stripe.com"
 
 **Response**:
-1. Connect to https://stripe.com using Chrome DevTools MCP
-2. Extract computed styles for header, navigation, hero section, feature cards, footer
-3. Capture screenshots at 320px, 768px, 1440px breakpoints
-4. Generate STYLE_GUIDE.md with 17 sections populated with Stripe's design system
-5. Implement pixel-perfect replica using Tailwind CSS
-6. Validate visual equivalence against screenshots
-7. Deliver complete package with style guide, implementation, and comparison screenshots
+1. **Run automated extraction**:
+   ```bash
+   cd developer-skills-plugin/skills/pixel-perfect-site-copy
+   node scripts/extract-styles.js https://stripe.com
+   ```
 
-The result will be indistinguishable from the original Stripe homepage with every font, color, spacing, and interaction replicated exactly.
+2. **Review generated files**:
+   - `site-copy-stripe.com/STYLE_GUIDE.md` - Design system with colors, fonts, spacing
+   - `site-copy-stripe.com/data/complete-extraction.json` - Full component styles
+   - `site-copy-stripe.com/original/` - Screenshots at 6 breakpoints
+
+3. **Implement pixel-perfect replica**:
+   - Use extracted style guide to build with Tailwind CSS
+   - Reference component styles from JSON data
+   - Match typography, colors, spacing exactly as documented
+
+4. **Validate visual equivalence**:
+   - Take screenshots of your implementation
+   - Save to `site-copy-stripe.com/replica/`
+   - Compare side-by-side with originals
+
+5. **Deliver complete package**:
+   - Style guide with Stripe's design system
+   - HTML/Tailwind implementation
+   - Comparison screenshots and notes
+
+**Result**: Indistinguishable from the original Stripe homepage with every font, color, spacing, and interaction replicated exactly - all achieved through automated extraction and systematic implementation.

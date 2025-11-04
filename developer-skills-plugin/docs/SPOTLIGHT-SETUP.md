@@ -51,7 +51,7 @@ You should see:
   "mcpServers": {
     "sentry-spotlight": {
       "command": "npx",
-      "args": ["-y", "@spotlightjs/spotlight@latest", "--stdio-mcp"],
+      "args": ["-y", "--prefer-online", "@spotlightjs/spotlight@latest", "mcp"],
       "env": {
         "SPOTLIGHT_PORT": "8969",
         "NODE_ENV": "development"
@@ -60,6 +60,8 @@ You should see:
   }
 }
 ```
+
+**Important**: Use `mcp` argument (NOT `--stdio-mcp`) as per Spotlight v3.0+ documentation.
 
 ✅ If this exists, the MCP server is configured.
 

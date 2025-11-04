@@ -77,14 +77,26 @@
           }
         ]
       }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/session-summary-generator.sh",
+            "timeout": 10,
+            "description": "Auto-generate session summary when Claude Code stops"
+          }
+        ]
+      }
     ]
   },
   "metadata": {
     "superflows": 14,
-    "active_hooks": 7,
-    "enforcement_hooks": ["logging-schema", "refactoring-safety", "pre-commit-validation", "test-verification"],
-    "suggestion_hooks": ["quick-fix", "ui-library", "integration-check", "code-explanation", "spotlight-error-check", "skill-gap-detection", "pixel-perfect-site-copy", "security-scan", "perf-check", "dependency-check", "pattern-recall"],
-    "supporting_skills": ["mock-data-removal", "full-stack-integration-checker", "error-handling-patterns"],
+    "active_hooks": 9,
+    "enforcement_hooks": ["logging-schema", "refactoring-safety", "pre-commit-validation", "test-verification", "session-summary"],
+    "suggestion_hooks": ["quick-fix", "ui-library", "integration-check", "code-explanation", "spotlight-error-check", "skill-gap-detection", "pixel-perfect-site-copy", "security-scan", "perf-check", "dependency-check", "pattern-recall", "superflow-summary-capture"],
+    "supporting_skills": ["mock-data-removal", "full-stack-integration-checker", "error-handling-patterns", "session-summary"],
     "superflow_list": [
       "pixel-perfect-site-copy",
       "refactoring-safety-protocol",
@@ -103,6 +115,12 @@
     ],
     "documentation": "../SUPERFLOWS.md",
     "integrations": ["spotlight-mcp", "skill-seekers", "chrome-devtools-mcp"],
-    "note": "All 14 superflows integrated into analyze-prompt.sh for centralized pattern detection. Supporting skills called by other workflows."
+    "note": "All 14 superflows integrated into analyze-prompt.sh for centralized pattern detection. Session-summary skill auto-triggers on SessionEnd and SuperflowComplete for post-session documentation. Manual /session-summary command available for checkpoints.",
+    "session_summary_integration": {
+      "auto_triggers": ["SessionEnd", "SuperflowComplete"],
+      "manual_trigger": "/session-summary",
+      "output_location": "PROJECT_ROOT/SESSION-SUMMARY-{timestamp}.md",
+      "capture_points": ["git-changes", "completed-todos", "pending-items", "known-issues"]
+    }
   }
 }

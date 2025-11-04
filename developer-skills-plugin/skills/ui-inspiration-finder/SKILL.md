@@ -1,6 +1,6 @@
 ---
 name: ui-inspiration-finder
-description: Use when building or refactoring UI components, especially landing pages, dashboards, or feature sections - searches premium UI library at C:\Users\Dominik\Documents\UI for matching components, patterns, and inspirations before implementing from scratch
+description: Use when building or refactoring UI components, especially landing pages, dashboards, or feature sections - searches premium UI library at /mnt/c/Users/Dominik/Documents/UI for matching components, patterns, and inspirations before implementing from scratch
 ---
 
 # UI Inspiration Finder
@@ -9,7 +9,7 @@ description: Use when building or refactoring UI components, especially landing 
 
 **Always check the premium UI library before implementing UI components.**
 
-You have access to a curated collection of high-quality React components and real-world design inspirations at `C:\Users\Dominik\Documents\UI`. This library contains production-ready implementations and screenshots from premium websites (Clay, Doist, Firefox, etc.) indexed by pattern, use case, and visual style.
+You have access to a curated collection of high-quality React components and real-world design inspirations at `/mnt/c/Users/Dominik/Documents/UI`. This library contains production-ready implementations and screenshots from premium websites (Clay, Doist, Firefox, etc.) indexed by pattern, use case, and visual style.
 
 **Core principle:** Don't build basic UI when premium implementations already exist. Check first, implement second.
 
@@ -31,7 +31,7 @@ Use this skill when:
 ## Library Structure
 
 ```
-C:\Users\Dominik\Documents\UI\
+/mnt/c/Users/Dominik/Documents/UI/
 ├── components/              # React/TypeScript implementations
 │   ├── animated_tabs/
 │   ├── animated_testimonials/
@@ -50,12 +50,12 @@ C:\Users\Dominik\Documents\UI\
 
 | Step | Action | Example |
 |------|--------|---------|
-| 1. Read index | `Read C:\Users\Dominik\Documents\UI\ui-inspiration-index.json` | Get full index structure |
+| 1. Read index | `Read /mnt/c/Users/Dominik/Documents/UI/ui-inspiration-index.json` | Get full index structure |
 | 2. Search by use case | Look in `"use_cases"` array | `"building credibility"`, `"displaying customer testimonials"` |
 | 3. Search by pattern | Look in `"ui_patterns"` array | `"masonry-grid"`, `"horizontal-scroll"`, `"badge-grid"` |
 | 4. Search by category | Look in `"category"` field | `"testimonials/social-proof"`, `"hero"`, `"pricing"` |
 | 5. Check related components | Look in `"related_components"` array | Points to actual component directories |
-| 6. Read component | `Read C:\Users\Dominik\Documents\UI\components/{name}/` | Get implementation code |
+| 6. Read component | `Read /mnt/c/Users/Dominik/Documents/UI/components/{name}/` | Get implementation code |
 
 ## Implementation Workflow
 
@@ -70,7 +70,7 @@ Before touching code, categorize the UI element:
 
 **Read the full index:**
 ```typescript
-const index = Read("C:\\Users\\Dominik\\Documents\\UI\\ui-inspiration-index.json");
+const index = Read("/mnt/c/Users/Dominik/Documents/UI/ui-inspiration-index.json");
 ```
 
 **Search strategies:**
