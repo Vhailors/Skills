@@ -1,0 +1,38 @@
+{
+  "mcpServers": {
+    "archon": {
+      "transport": "http",
+      "url": "http://localhost:8051/mcp",
+      "description": "Archon MCP Server - Knowledge base, task management, and project organization for AI coding assistants",
+      "capabilities": {
+        "knowledge": [
+          "rag_search_knowledge_base",
+          "rag_search_code_examples",
+          "rag_get_available_sources",
+          "rag_list_pages_for_source",
+          "rag_read_full_page"
+        ],
+        "projects": [
+          "find_projects",
+          "manage_project"
+        ],
+        "tasks": [
+          "find_tasks",
+          "manage_task"
+        ],
+        "documents": [
+          "find_documents",
+          "manage_document",
+          "find_versions",
+          "manage_version"
+        ]
+      },
+      "configuration": {
+        "default_port": 8051,
+        "ui_port": 3737,
+        "server_port": 8181
+      }
+    }
+  },
+  "_comment": "Add this configuration to your Claude Code MCP config file or use: claude mcp add --transport http archon http://localhost:8051/mcp"
+}
